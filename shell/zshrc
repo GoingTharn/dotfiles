@@ -175,3 +175,5 @@ if [[ "$(uname -s)" == "Linux" ]]; then
 else
   export LSCOLORS='ExFxBxDxCxegedabagacad'
 fi
+
+source ~/.zsh_aliases

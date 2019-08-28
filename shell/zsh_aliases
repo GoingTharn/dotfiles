@@ -1,0 +1,3 @@
+alias fs="cd ~/git_repos/foursquare.web"
+alias devsesh="ssh -t dev-jbarry screen -R -d"
+alias tf=terraform
