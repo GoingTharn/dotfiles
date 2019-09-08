@@ -177,3 +177,4 @@ else
 fi
 
 source ~/.zsh_aliases
+export PATH=$PATH:~/bin

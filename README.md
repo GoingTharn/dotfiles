@@ -1,6 +1,6 @@
-# Andrew's Dotfiles
+# John's Dotfiles
 
-These are my personal dotfiles.
+These are my personal dotfiles, stolen from Andrew. 
 
 ![Screenshot of my dotfiles](.images/screenshot.png)
 
@@ -116,7 +116,10 @@ curl -fLo "Droid Sans Mono Nerd Font Complete.otf" \
   https://github.com/ryanoasis/nerd-fonts/raw/2.0.0/patched-fonts/DroidSansMono/complete/Droid%20Sans%20Mono%20Nerd%20Font%20Complete.otf
 ```
 
-After downloading the font, set it to be the font that your terminal apps uses.
+This is Gnome, since I'm running with it for a while. 
+After downloading the font, install Gnome Tweak UI. 
+Change the MonoSpaceFont to be Droid Sans Mono Nerd. Keep the default font terminal on the Preferences. 
+
 
 #### Solarized on Ubuntu Terminal
 
@@ -175,16 +178,16 @@ The install script will run the configuration script, which fetches oh-my-zsh
 and symlinks the dotfiles to your home directory.
 
 ```shell
-curl https://andrew.cloud/dotfiles.sh | sh
+curl https://dev.goingtharn.com/dotfiles.sh | sh
 # or
-wget -qO- https://andrew.cloud/dotfiles.sh | sh
+wget -qO- https://dev.goingtharn.com/dotfiles.sh | sh
 ```
 
 Alternatively, you can manually clone the repository and run the `configure.sh`
 script.
 
 ```shell
-git clone --depth=1 git@github.com:MrPickles/dotfiles.git ~/.dotfiles
+git clone --depth=1 git@github.com:GoingTharn/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 ./configure.sh -t build
 ```
