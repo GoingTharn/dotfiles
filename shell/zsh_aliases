@@ -1,3 +1,2 @@
-alias fs="cd ~/git_repos/foursquare.web"
-alias devsesh="ssh -t dev-jbarry screen -R -d"
+alias lt="cd ~/repos/leaftrade-2.0"
 alias tf=terraform

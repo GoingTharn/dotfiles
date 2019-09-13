@@ -177,4 +177,4 @@ else
 fi
 
 source ~/.zsh_aliases
-export PATH=$PATH:~/bin
+export PATH=$PATH:/opt/pycharm/bin:~/bin
