@@ -5,6 +5,7 @@ POWERLEVEL9K_MODE='nerdfont-complete'
 ZSH_THEME='powerlevel10k/powerlevel10k'
 
 plugins=(
+  # brew  # add brew to .zshrc.local for linux
   git
   bundler
   docker

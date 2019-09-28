@@ -52,6 +52,7 @@ if exists("&wildignorecase")
   set wildignorecase
 endif
 
+execute 'packadd YouCompleteMe'
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
 if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
@@ -78,7 +79,7 @@ if has("autocmd")
   " Enable soft-wrapping for text files
   autocmd FileType text,markdown,html,xhtml,eruby setlocal wrap linebreak nolist
   " Set default tab width to 4 spaces in Python and Bazel
-  au Filetype python,bzl setl et ts=2 sw=2
+  au Filetype python,bzl setl et ts=4 sw=4
   " Set shell script syntax highlighting for zsh-theme files
   au BufRead,BufNewFile *.zsh-theme set syntax=sh
   " For Haml
@@ -133,6 +134,8 @@ let g:airline_symbols.readonly = ''
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
 let g:airline#extensions#tabline#show_buffers = 0
+
+let g:python_highlight_all = 1
 
 " Local config
 if filereadable(glob("~/.vimrc.local"))
