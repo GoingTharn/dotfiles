@@ -7,7 +7,8 @@ ZSH_THEME='powerlevel10k/powerlevel10k'
 plugins=(
   git
   bundler
-  brew
+  docker
+  docker-compose
   gem
   history-substring-search
   colored-man-pages
@@ -177,4 +178,4 @@ else
 fi
 
 source ~/.zsh_aliases
-export PATH=$PATH:/opt/pycharm/bin:~/bin
+export PATH=$PATH:/opt/pycharm-2019.2.3/bin:~/bin
