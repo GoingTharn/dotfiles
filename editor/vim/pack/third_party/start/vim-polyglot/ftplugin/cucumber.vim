@@ -1,11 +1,9 @@
-if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'cucumber') != -1
-  finish
-endif
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'cucumber') == -1
 
 " Vim filetype plugin
 " Language:	Cucumber
 " Maintainer:	Tim Pope <vimNOSPAM@tpope.org>
-" Last Change:	2013 Jun 01
+" Last Change:	2016 Aug 29
 
 " Only do this when not done yet for this buffer
 if (exists("b:did_ftplugin"))
@@ -152,3 +150,5 @@ let &cpo = s:keepcpo
 unlet s:keepcpo
 
 " vim:set sts=2 sw=2:
+
+endif

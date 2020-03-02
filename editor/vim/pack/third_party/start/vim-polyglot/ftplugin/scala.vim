@@ -1,6 +1,4 @@
-if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'scala') != -1
-  finish
-endif
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'scala') == -1
 
 " Vim filetype plugin
 " Language:             Scala
@@ -29,8 +27,8 @@ setlocal commentstring=//\ %s
 
 setlocal shiftwidth=2 softtabstop=2 expandtab
 
-setlocal include='^\s*import'
-setlocal includeexpr='substitute(v:fname,"\\.","/","g")'
+setlocal include=^\\s*import
+setlocal includeexpr=substitute(v:fname,'\\.','/','g')
 
 setlocal path+=src/main/scala,src/test/scala
 setlocal suffixesadd=.scala
@@ -178,3 +176,5 @@ noremap <script> <buffer> <silent> ]] :call <SID>NextSection(0)<cr>
 noremap <script> <buffer> <silent> [[ :call <SID>NextSection(1)<cr>
 
 " vim:set sw=2 sts=2 ts=8 et:
+
+endif

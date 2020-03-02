@@ -1,6 +1,4 @@
-if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'crystal') != -1
-  finish
-endif
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'crystal') == -1
 
 " Only load this indent file when no other was loaded.
 if exists('b:did_indent')
@@ -19,7 +17,7 @@ setlocal nosmartindent
 setlocal indentexpr=GetCrystalIndent(v:lnum)
 setlocal indentkeys=0{,0},0),0],!^F,o,O,e,:,.
 setlocal indentkeys+==end,=else,=elsif,=when,=ensure,=rescue,==begin,==end
-setlocal indentkeys+==private,=protected,=public
+setlocal indentkeys+==private,=protected
 
 " Only define the function once.
 if exists('*GetCrystalIndent')
@@ -51,12 +49,12 @@ let s:skip_expr =
 
 " Regex used for words that, at the start of a line, add a level of indent.
 let s:crystal_indent_keywords =
-      \ '^\s*\zs\<\%(module\|\%(private\s\+\)\=\%(abstract\s\+\)\=\%(class\|struct\)\|enum\|if' .
-      \ '\|for\|macro\|while\|until\|else\|elsif\|case\|when\|unless\|begin\|ensure\|rescue\|lib' .
-      \ '\|\%(protected\|private\)\=\s*def\):\@!\>' .
+      \ '^\s*\zs\<\%(\%(\%(private\|protected\)\s\+\)\=\%(abstract\s\+\)\=\%(class\|struct\)' .
+      \ '\|if\|for\|while\|until\|else\|elsif\|case\|when\|unless\|begin\|ensure\|rescue\|union' .
+      \ '\|\%(private\|protected\)\=\s*\%(def\|class\|struct\|module\|macro\|lib\|enum\)\):\@!\>' .
       \ '\|\%([=,*/%+-]\|<<\|>>\|:\s\)\s*\zs' .
       \ '\<\%(if\|for\|while\|until\|case\|unless\|begin\):\@!\>' .
-      \ '\|{%\s*\<\%(if\|for\|while\|until\|lib\|case\|unless\|begin\|else\|elsif\|when\)'
+      \ '\|{%\s*\<\%(if\|for\|while\|until\|case\|unless\|begin\|else\|elsif\|when\)'
 
 " Regex used for words that, at the start of a line, remove a level of indent.
 let s:crystal_deindent_keywords =
@@ -66,10 +64,11 @@ let s:crystal_deindent_keywords =
 " Regex that defines the start-match for the 'end' keyword.
 " TODO: the do here should be restricted somewhat (only at end of line)?
 let s:end_start_regex =
-      \ '{%\s*\<\%(if\|for\|while\|until\|unless\|begin\|lib\)\>\|' .
+      \ '{%\s*\<\%(if\|for\|while\|until\|unless\|begin\)\>\|' .
       \ '\C\%(^\s*\|[=,*/%+\-|;{]\|<<\|>>\|:\s\)\s*\zs' .
-      \ '\<\%(module\|\%(private\s\+\)\=\%(abstract\s\+\)\=\%(class\|struct\)\|enum\|macro\|if\|for\|while\|until\|case\|unless\|begin\|lib' .
-      \ '\|\%(protected\|private\)\=\s*def\):\@!\>' .
+      \ '\<\%(\%(\%(private\|protected\)\s\+\)\=\%(abstract\s\+\)\=\%(class\|struct\)' .
+      \ '\|if\|for\|while\|until\|case\|unless\|begin\|union' .
+      \ '\|\%(private\|protected\)\=\s*\%(def\|lib\|enum\|macro\|module\)\):\@!\>' .
       \ '\|\%(^\|[^.:@$]\)\@<=\<do:\@!\>'
 
 " Regex that defines the middle-match for the 'end' keyword.
@@ -124,7 +123,7 @@ let s:block_continuation_regex = '^\s*[^])}\t ].*'.s:block_regex
 let s:leading_operator_regex = '^\s*[.]'
 
 " Regex that describes all indent access modifiers
-let s:access_modifier_regex = '\C^\s*\%(public\|protected\|private\)\s*\%(#.*\)\=$'
+let s:access_modifier_regex = '\C^\s*\%(protected\|private\)\s*\%(#.*\)\=$'
 
 " 2. Auxiliary Functions {{{1
 " ======================
@@ -637,3 +636,5 @@ let &cpo = s:cpo_save
 unlet s:cpo_save
 
 " vim:set sw=2 sts=2 ts=8 et:
+
+endif

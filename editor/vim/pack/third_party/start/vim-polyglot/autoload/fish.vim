@@ -1,6 +1,4 @@
-if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'fish') != -1
-  finish
-endif
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'fish') == -1
 
 function! fish#Indent()
     let l:shiftwidth = shiftwidth()
@@ -11,15 +9,15 @@ function! fish#Indent()
     let l:indent = 0
     let l:prevline = getline(l:prevlnum)
     if l:prevline =~# '\v^\s*switch>'
-        let l:indent = l:shiftwidth * 2
+        return indent(l:prevlnum) + l:shiftwidth
     elseif l:prevline =~# '\v^\s*%(begin|if|else|while|for|function|case)>'
         let l:indent = l:shiftwidth
     endif
     let l:line = getline(v:lnum)
     if l:line =~# '\v^\s*end>'
-        return indent(v:lnum) - (l:indent ==# 0 ? l:shiftwidth : l:indent)
+        return indent(l:prevlnum) - (l:indent ==# 0 ? l:shiftwidth : l:indent)
     elseif l:line =~# '\v^\s*%(case|else)>'
-        return indent(v:lnum) - l:shiftwidth
+        return indent(l:prevlnum) - l:shiftwidth
     endif
     return indent(l:prevlnum) + l:indent
 endfunction
@@ -69,3 +67,5 @@ endfunction
 function! fish#errorformat()
     return '%Afish: %m,%-G%*\\ ^,%-Z%f (line %l):%s'
 endfunction
+
+endif

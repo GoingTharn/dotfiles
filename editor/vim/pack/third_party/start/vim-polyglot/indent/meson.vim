@@ -1,9 +1,8 @@
-if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'meson') != -1
-  finish
-endif
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'meson') == -1
 
 " Vim indent file
 " Language:		Meson
+" License:		VIM License
 " Maintainer:		Nirbheek Chauhan <nirbheek.chauhan@gmail.com>
 " Original Authors:	David Bustos <bustos@caltech.edu>
 "			Bram Moolenaar <Bram@vim.org>
@@ -181,3 +180,5 @@ let &cpo = s:keepcpo
 unlet s:keepcpo
 
 " vim:sw=2
+
+endif

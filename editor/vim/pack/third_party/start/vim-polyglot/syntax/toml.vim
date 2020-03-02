@@ -1,6 +1,4 @@
-if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'toml') != -1
-  finish
-endif
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'toml') == -1
 
 " Language:   TOML
 " Maintainer: Caleb Spare <cespare@gmail.com>
@@ -65,6 +63,10 @@ hi def link tomlTable Title
 syn region tomlTableArray oneline start=/^\s*\[\[/ end=/\]\]/ contains=tomlKey,tomlKeyDq,tomlKeySq
 hi def link tomlTableArray Title
 
+syn cluster tomlValue contains=tomlArray,tomlString,tomlInteger,tomlFloat,tomlBoolean,tomlDate,tomlComment
+syn region tomlKeyValueArray start=/=\s*\[\zs/ end=/\]/ contains=@tomlValue
+syn region tomlArray start=/\[/ end=/\]/ contains=@tomlValue contained
+
 syn keyword tomlTodo TODO FIXME XXX BUG contained
 hi def link tomlTodo Todo
 
@@ -74,3 +76,5 @@ hi def link tomlComment Comment
 syn sync minlines=500
 
 let b:current_syntax = "toml"
+
+endif

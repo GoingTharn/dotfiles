@@ -2,17 +2,17 @@
 
 set -E
 
-DIRS="syntax indent compiler autoload ftplugin after/syntax after/indent after/ftplugin"
+DIRS="syntax indent compiler autoload ftplugin ctags after/syntax after/indent after/ftplugin"
 # shellcheck disable=SC2034
 DIRS_BASIC="syntax compiler indent after/syntax after/indent"
 # shellcheck disable=SC2034
-DIRS_ALL="syntax indent compiler autoload ftplugin after"
+DIRS_ALL="syntax indent compiler autoload ftplugin after extras ctags"
 # shellcheck disable=SC2034
 DIRS_SYNTAX="syntax indent after/syntax after/indent"
 # shellcheck disable=SC2034
 DIRS_NOAFTER="syntax compiler indent autoload ftplugin"
 DIRS_JAVASCRIPT="${DIRS} extras"
-read -r -a DIRS_RM <<<"$DIRS_JAVASCRIPT"
+read -r -a DIRS_RM <<<"$DIRS_ALL"
 
 OUTPUT=""
 
@@ -72,8 +72,11 @@ extract() {
       continue
     fi
 
-    [ -d "${dir}${subtree:-/}ftdetect" ] && for f in "${dir}${subtree:-/}ftdetect/"*; do
-      cat <<EOF >> tmp/polyglot.vim
+    ftdetect=("${dir}${subtree:-/}ftdetect"/*)
+    if [ "$ftdetect" ] && [ "$ftdetect" != "${dir}${subtree:-/}ftdetect/*" ]; then
+      IFS=$'\n' ftdetect=($(sort -V <<< "${ftdetect[*]}")); unset IFS
+      for f in "${ftdetect[@]}"; do
+        cat <<EOF >> tmp/polyglot.vim
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, '${pack%%:*}') == -1
   augroup filetypedetect
   " ${pack%%:*}, from ${f##*/ftdetect/} in ${pack#*:}
@@ -82,7 +85,8 @@ $(cat "${f}")
 endif
 
 EOF
-    done
+      done
+    fi
 
   done
 
@@ -101,7 +105,7 @@ EOF
 }
 
 copy_dir() {
-  find "$1/$2" \( -name '*.vim' -o -name '*.vital' \) -print0 | while read -r -d $'\0' file; do
+  find "$1/$2" \( -name '*.vim' -o -name '*.vital' -o -name '*.ctags' \) -print0 | while read -r -d $'\0' file; do
     copy_file "$1" "$file" "$3"
   done
 }
@@ -127,7 +131,11 @@ copy_file() {
   touch "$file_in_dst"
 
   # Use comma instead of / to handle cases like c/c++
-  sed -e "s,%%PACK%%,${package_name}," -e "/%%CONTENT%%/{r ${file_in_tmp}" -e "d;}" plugin_guard.vim.template >> "$file_in_dst"
+  if [[ "${package_name}" == "jsx" ]]; then
+    sed -e "s,%%PACK%%,${package_name}," -e "/%%CONTENT%%/{r ${file_in_tmp}" -e "d;}" plugin_guard_jsx.vim.template >> "$file_in_dst"
+  else
+    sed -e "s,%%PACK%%,${package_name}," -e "/%%CONTENT%%/{r ${file_in_tmp}" -e "d;}" plugin_guard.vim.template >> "$file_in_dst"
+  fi
 }
 
 update_readme() {
@@ -178,6 +186,7 @@ PACKS="
   cucumber:tpope/vim-cucumber
   cue:mgrabovsky/vim-cuesheet
   dart:dart-lang/dart-vim-plugin
+  dhall:vmchale/dhall-vim
   dlang:JesseKPhillips/d.vim
   dockerfile:ekalinin/Dockerfile.vim
   elixir:elixir-lang/vim-elixir
@@ -186,7 +195,7 @@ PACKS="
   emblem:yalesov/vim-emblem
   erlang:vim-erlang/vim-erlang-runtime
   ferm:vim-scripts/ferm.vim
-  fish:dag/vim-fish
+  fish:georgewitteman/vim-fish
   flatbuffers:dcharbon/vim-flatbuffers
   fsharp:fsharp/vim-fsharp:_BASIC
   git:tpope/vim-git
@@ -194,28 +203,27 @@ PACKS="
   gmpl:maelvalais/gmpl.vim
   gnuplot:vim-scripts/gnuplot-syntax-highlighting
   go:fatih/vim-go:_BASIC
+  graphql:jparise/vim-graphql:_ALL
   gradle:tfnico/vim-gradle
-  groovy:vim-scripts/groovy.vim
-  groovy-indent:vim-scripts/groovyindent-unix
   haml:sheerun/vim-haml
   handlebars:mustache/vim-mustache-handlebars
   haproxy:CH-DanReif/haproxy.vim
   haskell:neovimhaskell/haskell-vim
   haxe:yaymukund/vim-haxe
   hcl:b4b4r07/vim-hcl
+  helm:towolf/vim-helm
   hive:zebradil/hive.vim
   html5:othree/html5.vim
   i3:mboughaba/i3config.vim
   idris:idris-hackers/idris-vim
   ion:vmchale/ion-vim
-  jasmine:glanotte/vim-jasmine
   javascript:pangloss/vim-javascript:_JAVASCRIPT
   jenkins:martinda/Jenkinsfile-vim-syntax
   jinja:lepture/vim-jinja
   json5:GutenYe/json5.vim
   json:elzr/vim-json
   jst:briancollins/vim-jst
-  jsx:MaxMEllon/vim-jsx-pretty
+  jsx:MaxMEllon/vim-jsx-pretty:_ALL
   julia:JuliaEditorSupport/julia-vim
   kotlin:udalov/kotlin-vim
   latex:LaTeX-Box-Team/LaTeX-Box
@@ -226,7 +234,7 @@ PACKS="
   log:MTDL9/vim-log-highlighting
   lua:tbastos/vim-lua
   mako:sophacles/vim-bundle-mako
-  markdown:plasticboy/vim-markdown:_SYNTAX
+  markdown:plasticboy/vim-markdown:_NOAFTER
   mathematica:voldikss/vim-mma
   mdx:jxnblk/vim-mdx-js
   meson:mesonbuild/meson:_ALL:/data/syntax-highlighting/vim/
@@ -236,7 +244,7 @@ PACKS="
   nix:LnL7/vim-nix
   objc:b4winckler/vim-objc
   ocaml:rgrinberg/vim-ocaml
-  octave:vim-scripts/octave.vim--
+  octave:McSinyx/vim-octave
   opencl:petRUShka/vim-opencl
   perl:vim-perl/vim-perl
   pgsql:lifepillar/pgsql.vim
@@ -246,20 +254,20 @@ PACKS="
   powershell:PProvost/vim-ps1
   protobuf:uarun/vim-protobuf
   pug:digitaltoad/vim-pug
-  puppet:voxpupuli/vim-puppet
+  puppet:rodjek/vim-puppet
   purescript:purescript-contrib/purescript-vim
   python-compiler:aliev/vim-compiler-python
   python-indent:Vimjas/vim-python-pep8-indent
   python:vim-python/python-syntax
   qmake:artoj/qmake-syntax-vim
   qml:peterhoeg/vim-qml
-  r-lang:vim-scripts/R.vim
+  r-lang:vim-scripts/R.vim:_BASIC
   racket:wlangstroth/vim-racket
   ragel:jneen/ragel.vim
   raml:IN3D/vim-raml
+  razor:adamclerk/vim-razor
   reason:reasonml-editor/vim-reason-plus
-  rego:tsandall/vim-rego
-  rspec:sheerun/rspec.vim
+  rspec:keith/rspec.vim
   rst:marshallward/vim-restructuredtext
   ruby:vim-ruby/vim-ruby
   rust:rust-lang/rust.vim
@@ -270,8 +278,8 @@ PACKS="
   slime:slime-lang/vim-slime-syntax
   smt2:bohlender/vim-smt2
   solidity:tomlion/vim-solidity
-  styled-components:styled-components/vim-styled-components#main
   stylus:wavded/vim-stylus
+  svelte:evanleck/vim-svelte
   svg-indent:jasonshell/vim-svg-indent
   svg:vim-scripts/svg.vim
   swift:keith/swift.vim
@@ -280,12 +288,13 @@ PACKS="
   terraform:hashivim/vim-terraform
   textile:timcharper/textile.vim
   thrift:solarnz/thrift.vim
-  tmux:ericpruitt/tmux.vim
+  tmux:ericpruitt/tmux.vim:_ALL:/vim/
   tomdoc:wellbredgrapefruit/tomdoc.vim
   toml:cespare/vim-toml
   tptp:c-cube/vim-tptp
   twig:lumiliet/vim-twig
-  typescript:leafgarland/typescript-vim
+  typescript:HerringtonDarkholme/yats.vim
+  v:ollykel/v-vim
   vala:arrufat/vala.vim
   vbnet:vim-scripts/vbnet.vim
   vcl:smerrill/vcl-vim-plugin
@@ -297,7 +306,9 @@ PACKS="
   xls:vim-scripts/XSLT-syntax
   yaml:stephpy/vim-yaml
   yard:sheerun/vim-yardoc
+  zephir:xwsoul/vim-zephir
   zig:ziglang/zig.vim
+  zinit:zinit-zsh/zplugin-vim-syntax
 "
 
 rm -rf tmp

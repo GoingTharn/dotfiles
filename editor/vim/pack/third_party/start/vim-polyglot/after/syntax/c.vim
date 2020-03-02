@@ -1,6 +1,4 @@
-if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'c++11') != -1
-  finish
-endif
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'c++11') == -1
 
 " Vim syntax file
 " Language: C Additions
@@ -36,6 +34,19 @@ if exists('g:cpp_member_variable_highlight') && g:cpp_member_variable_highlight
     syn match   cCustomPtr    "->" contained
     syn match   cCustomMemVar "\(\.\|->\)\h\w*" contains=cCustomDot,cCustomPtr
     hi def link cCustomMemVar Function
+endif
+
+" -----------------------------------------------------------------------------
+"  Highlight POSIX functions.
+" -----------------------------------------------------------------------------
+if exists('g:cpp_posix_standard') && g:cpp_posix_standard
+	syn keyword cPOSIXFunction 	socket accept bind connect getsockname
+	syn keyword cPOSIXFunction 	listen recv recvfrom recvmsg
+	syn keyword cPOSIXFunction 	send sendto sendmsg setsockopt socketpair
+	syn keyword cPOSIXFunction 	htonl htons ntohl ntohs
+	syn keyword cPOSIXFunction 	inet_ntop inet_pton getaddrinfo
+	syn keyword cPOSIXFunction 	poll select pselect
+	hi def link cPOSIXFunction Function
 endif
 
 " -----------------------------------------------------------------------------
@@ -306,3 +317,5 @@ hi def link cBoolean Boolean
 "hi def link cDelimiter Delimiter
 " foldmethod=syntax fix, courtesy of Ivan Freitas
 "hi def link cBraces Delimiter
+
+endif

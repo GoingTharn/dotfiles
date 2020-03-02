@@ -1,6 +1,4 @@
-if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'rust') != -1
-  finish
-endif
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'rust') == -1
 
 " Vim syntax file
 " Language:     Rust
@@ -19,7 +17,13 @@ endif
 " Syntax definitions {{{1
 " Basic keywords {{{2
 syn keyword   rustConditional match if else
-syn keyword   rustRepeat for loop while
+syn keyword   rustRepeat loop while
+" `:syn match` must be used to prioritize highlighting `for` keyword.
+syn match     rustRepeat /\<for\>/
+" Highlight `for` keyword in `impl ... for ... {}` statement. This line must
+" be put after previous `syn match` line to overwrite it.
+syn match     rustKeyword /\%(\<impl\>.\+\)\@<=\<for\>/
+syn keyword   rustRepeat in
 syn keyword   rustTypedef type nextgroup=rustIdentifier skipwhite skipempty
 syn keyword   rustStructure struct enum nextgroup=rustIdentifier skipwhite skipempty
 syn keyword   rustUnion union nextgroup=rustIdentifier skipwhite skipempty contained
@@ -30,14 +34,14 @@ syn match rustExistentialContextual /\<existential\_s\+type/ transparent contain
 
 syn match     rustAssert      "\<assert\(\w\)*!" contained
 syn match     rustPanic       "\<panic\(\w\)*!" contained
-syn match     rustKeyword     "\<async\%(\s\|\n\)\@="
+syn match     rustAsync       "\<async\%(\s\|\n\)\@="
 syn keyword   rustKeyword     break
-syn keyword   rustKeyword     box nextgroup=rustBoxPlacement skipwhite skipempty
+syn keyword   rustKeyword     box
 syn keyword   rustKeyword     continue
 syn keyword   rustKeyword     crate
 syn keyword   rustKeyword     extern nextgroup=rustExternCrate,rustObsoleteExternMod skipwhite skipempty
 syn keyword   rustKeyword     fn nextgroup=rustFuncName skipwhite skipempty
-syn keyword   rustKeyword     in impl let
+syn keyword   rustKeyword     impl let
 syn keyword   rustKeyword     macro
 syn keyword   rustKeyword     pub nextgroup=rustPubScope skipwhite skipempty
 syn keyword   rustKeyword     return
@@ -49,7 +53,9 @@ syn keyword   rustKeyword     use nextgroup=rustModPath skipwhite skipempty
 " FIXME: Scoped impl's name is also fallen in this category
 syn keyword   rustKeyword     mod trait nextgroup=rustIdentifier skipwhite skipempty
 syn keyword   rustStorage     move mut ref static const
-syn match rustDefault /\<default\ze\_s\+\(impl\|fn\|type\|const\)\>/
+syn match     rustDefault     /\<default\ze\_s\+\(impl\|fn\|type\|const\)\>/
+syn keyword   rustAwait       await
+syn match     rustKeyword     /\<try\>!\@!/ display
 
 syn keyword rustPubScopeCrate crate contained
 syn match rustPubScopeDelim /[()]/ contained
@@ -62,14 +68,6 @@ syn keyword   rustObsoleteExternMod mod contained nextgroup=rustIdentifier skipw
 
 syn match     rustIdentifier  contains=rustIdentifierPrime "\%([^[:cntrl:][:space:][:punct:][:digit:]]\|_\)\%([^[:cntrl:][:punct:][:space:]]\|_\)*" display contained
 syn match     rustFuncName    "\%([^[:cntrl:][:space:][:punct:][:digit:]]\|_\)\%([^[:cntrl:][:punct:][:space:]]\|_\)*" display contained
-
-syn region    rustBoxPlacement matchgroup=rustBoxPlacementParens start="(" end=")" contains=TOP contained
-" Ideally we'd have syntax rules set up to match arbitrary expressions. Since
-" we don't, we'll just define temporary contained rules to handle balancing
-" delimiters.
-syn region    rustBoxPlacementBalance start="(" end=")" containedin=rustBoxPlacement transparent
-syn region    rustBoxPlacementBalance start="\[" end="\]" containedin=rustBoxPlacement transparent
-" {} are handled by rustFoldBraces
 
 syn region rustMacroRepeat matchgroup=rustMacroRepeatDelimiters start="$(" end=")" contains=TOP nextgroup=rustMacroRepeatCount
 syn match rustMacroRepeatCount ".\?[*+]" contained
@@ -149,11 +147,20 @@ syn match     rustEscapeError   display contained /\\./
 syn match     rustEscape        display contained /\\\([nrt0\\'"]\|x\x\{2}\)/
 syn match     rustEscapeUnicode display contained /\\u{\%(\x_*\)\{1,6}}/
 syn match     rustStringContinuation display contained /\\\n\s*/
-syn region    rustString      start=+b"+ skip=+\\\\\|\\"+ end=+"+ contains=rustEscape,rustEscapeError,rustStringContinuation
-syn region    rustString      start=+"+ skip=+\\\\\|\\"+ end=+"+ contains=rustEscape,rustEscapeUnicode,rustEscapeError,rustStringContinuation,@Spell
-syn region    rustString      start='b\?r\z(#*\)"' end='"\z1' contains=@Spell
+syn region    rustString      matchgroup=rustStringDelimiter start=+b"+ skip=+\\\\\|\\"+ end=+"+ contains=rustEscape,rustEscapeError,rustStringContinuation
+syn region    rustString      matchgroup=rustStringDelimiter start=+"+ skip=+\\\\\|\\"+ end=+"+ contains=rustEscape,rustEscapeUnicode,rustEscapeError,rustStringContinuation,@Spell
+syn region    rustString      matchgroup=rustStringDelimiter start='b\?r\z(#*\)"' end='"\z1' contains=@Spell
 
-syn region    rustAttribute   start="#!\?\[" end="\]" contains=rustString,rustDerive,rustCommentLine,rustCommentBlock,rustCommentLineDocError,rustCommentBlockDocError
+" Match attributes with either arbitrary syntax or special highlighting for
+" derives. We still highlight strings and comments inside of the attribute.
+syn region    rustAttribute   start="#!\?\[" end="\]" contains=@rustAttributeContents,rustAttributeParenthesizedParens,rustAttributeParenthesizedCurly,rustAttributeParenthesizedBrackets,rustDerive
+syn region    rustAttributeParenthesizedParens matchgroup=rustAttribute start="\w\%(\w\)*("rs=e end=")"re=s transparent contained contains=rustAttributeBalancedParens,@rustAttributeContents
+syn region    rustAttributeParenthesizedCurly matchgroup=rustAttribute start="\w\%(\w\)*{"rs=e end="}"re=s transparent contained contains=rustAttributeBalancedCurly,@rustAttributeContents
+syn region    rustAttributeParenthesizedBrackets matchgroup=rustAttribute start="\w\%(\w\)*\["rs=e end="\]"re=s transparent contained contains=rustAttributeBalancedBrackets,@rustAttributeContents
+syn region    rustAttributeBalancedParens matchgroup=rustAttribute start="("rs=e end=")"re=s transparent contained contains=rustAttributeBalancedParens,@rustAttributeContents
+syn region    rustAttributeBalancedCurly matchgroup=rustAttribute start="{"rs=e end="}"re=s transparent contained contains=rustAttributeBalancedCurly,@rustAttributeContents
+syn region    rustAttributeBalancedBrackets matchgroup=rustAttribute start="\["rs=e end="\]"re=s transparent contained contains=rustAttributeBalancedBrackets,@rustAttributeContents
+syn cluster   rustAttributeContents contains=rustString,rustCommentLine,rustCommentBlock,rustCommentLineDocError,rustCommentBlockDocError
 syn region    rustDerive      start="derive(" end=")" contained contains=rustDeriveTrait
 " This list comes from src/libsyntax/ext/deriving/mod.rs
 " Some are deprecated (Encodable, Decodable) or to be removed after a new snapshot (Show).
@@ -194,6 +201,7 @@ syn region rustGenericLifetimeCandidate display start=/\%(<\|,\s*\)\@<='/ end=/[
 "rustLifetime must appear before rustCharacter, or chars will get the lifetime highlighting
 syn match     rustLifetime    display "\'\%([^[:cntrl:][:space:][:punct:][:digit:]]\|_\)\%([^[:cntrl:][:punct:][:space:]]\|_\)*"
 syn match     rustLabel       display "\'\%([^[:cntrl:][:space:][:punct:][:digit:]]\|_\)\%([^[:cntrl:][:punct:][:space:]]\|_\)*:"
+syn match     rustLabel       display "\%(\<\%(break\|continue\)\s*\)\@<=\'\%([^[:cntrl:][:space:][:punct:][:digit:]]\|_\)\%([^[:cntrl:][:punct:][:space:]]\|_\)*"
 syn match   rustCharacterInvalid   display contained /b\?'\zs[\n\r\t']\ze'/
 " The groups negated here add up to 0-255 but nothing else (they do not seem to go beyond ASCII).
 syn match   rustCharacterInvalidUnicode   display contained /b'\zs[^[:cntrl:][:graph:][:alnum:][:space:]]\ze'/
@@ -281,6 +289,7 @@ hi def link rustEscapeUnicode rustEscape
 hi def link rustEscapeError   Error
 hi def link rustStringContinuation Special
 hi def link rustString        String
+hi def link rustStringDelimiter String
 hi def link rustCharacterInvalid Error
 hi def link rustCharacterInvalidUnicode rustCharacterInvalid
 hi def link rustCharacter     Character
@@ -337,8 +346,9 @@ hi def link rustLifetime      Special
 hi def link rustLabel         Label
 hi def link rustExternCrate   rustKeyword
 hi def link rustObsoleteExternMod Error
-hi def link rustBoxPlacementParens Delimiter
 hi def link rustQuestionMark  Special
+hi def link rustAsync         rustKeyword
+hi def link rustAwait         rustKeyword
 
 " Other Suggestions:
 " hi rustAttribute ctermfg=cyan
@@ -353,3 +363,5 @@ syn sync maxlines=500
 let b:current_syntax = "rust"
 
 " vim: set et sw=4 sts=4 ts=8:
+
+endif

@@ -1,6 +1,4 @@
-if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'html5') != -1
-  finish
-endif
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'html5') == -1
 
 " Vim syntax file
 " Language:     HTML (version 5.1)
@@ -35,7 +33,7 @@ syn keyword htmlTagName contained article aside audio canvas command
 syn keyword htmlTagName contained datalist details dialog embed figcaption figure footer
 syn keyword htmlTagName contained header hgroup keygen main mark meter menu menuitem nav output
 syn keyword htmlTagName contained progress ruby rt rp rb rtc section source summary time track video data
-syn keyword htmlTagName contained template content shadow
+syn keyword htmlTagName contained template content shadow slot
 syn keyword htmlTagName contained wbr bdi
 syn keyword htmlTagName contained picture
 
@@ -192,9 +190,9 @@ syn keyword htmlArg contained scriptlevel scriptminsize scriptsize scriptsizemul
 syn keyword htmlArg contained stretchy subscriptshift superscriptshift symmetric thickmathspace thinmathspace type valign verythickmathspace verythinmathspace
 syn keyword htmlArg contained veryverythickmathspace veryverythinmathspace voffset width xref
 
-if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'jinja') != -1
-  finish
+
 endif
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'jinja') == -1
 
 " Vim syntax file
 " Language:	HTML (version 5)
@@ -286,3 +284,5 @@ syn match  htmlArg contained "\<aria-\(dropeffect\|grabbed\)\>"
 " Relationship Attributes
 syn match  htmlArg contained "\<aria-\(activedescendant\|controls\|describedby\|flowto\|\)\>"
 syn match  htmlArg contained "\<aria-\(labelledby\|owns\|posinset\|setsize\|\)\>"
+
+endif

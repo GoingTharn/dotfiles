@@ -1,6 +1,4 @@
-if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'pgsql') != -1
-  finish
-endif
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'pgsql') == -1
 
 " Vim indent file
 " Language:    SQL
@@ -24,7 +22,7 @@ setlocal indentkeys-=:
 setlocal indentkeys-=0#
 setlocal indentkeys-=e
 
-if has('patch-7.3.694') || (v:version == 703 && has('patch694'))
+if exists('*shiftwidth')
     fun! s:shiftwidth()
         return shiftwidth()
     endf
@@ -41,16 +39,12 @@ endif
 " SQL is generally case insensitive, so this files assumes that
 " These keywords are something that would trigger an indent LEFT, not
 " an indent right, since the SQLBlockStart is used for those keywords
-setlocal indentkeys+==~end,=~else,=~elseif,=~elsif,0=~when,0=)
+setlocal indentkeys+==~begin,=~end,=~else,=~elseif,=~elsif,0=~when,=~exception,0=)
 
 " GetSQLIndent is executed whenever one of the expressions
 " in the indentkeys is typed
 setlocal indentexpr=GetSQLIndent()
 
-" Only define the functions once.
-if exists("*GetSQLIndent")
-    finish
-endif
 let s:keepcpo= &cpo
 set cpo&vim
 
@@ -340,7 +334,7 @@ function! GetSQLIndent()
     " Check current line; search for simplistic matching start-of-block
     let line = getline(v:lnum)
 
-    if line =~? '^\s*els'
+    if line =~? '^\s*els' || line =~? '^\s*begin' || line =~? '^\s*exception'
         " Any line when you type else will automatically back up one
         " ident level  (ie else, elseif, elsif)
         let ind = ind - s:shiftwidth()
@@ -395,3 +389,5 @@ endfunction
 let &cpo= s:keepcpo
 unlet s:keepcpo
 " vim: ts=4 fdm=marker sw=4
+
+endif

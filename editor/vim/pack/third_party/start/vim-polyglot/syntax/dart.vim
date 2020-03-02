@@ -1,6 +1,4 @@
-if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'dart') != -1
-  finish
-endif
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'dart') == -1
 
 " Vim syntax file " Language: Dart
 " Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
@@ -30,7 +28,7 @@ syntax keyword dartConstant       null
 syntax keyword dartTypedef        this super class typedef enum mixin
 syntax keyword dartOperator       new is as in
 syntax match   dartOperator       "+=\=\|-=\=\|*=\=\|/=\=\|%=\=\|\~/=\=\|<<=\=\|>>=\=\|[<>]=\=\|===\=\|\!==\=\|&=\=\|\^=\=\||=\=\|||\|&&\|\[\]=\=\|=>\|!\|\~\|?\|:"
-syntax keyword dartType           void var bool int double num dynamic
+syntax keyword dartCoreType       void var dynamic
 syntax keyword dartStatement      return
 syntax keyword dartStorageClass   static abstract final const factory
 syntax keyword dartExceptions     throw rethrow try on catch finally
@@ -53,22 +51,26 @@ syntax match   dartLibrary       "^\(library\|part of\|part\)\>"
 syntax match   dartMetadata      "@\([_$a-zA-Z][_$a-zA-Z0-9]*\.\)*[_$a-zA-Z][_$a-zA-Z0-9]*\>"
 
 " Numbers
-syntax match dartNumber         "\<\d\+\(\.\d\+\)\=\>"
+syntax match   dartNumber        "\<\d\+\(\.\d\+\)\=\>"
 
-" Core libraries
-if !exists('dart_corelib_highlight') || dart_corelib_highlight
-  syntax keyword dartCoreClasses BidirectionalIterator Comparable DateTime
-      \ Duration Expando Function Invocation Iterable Iterator List Map Match
-      \ Object Pattern RegExp RuneIterator Runes Set StackTrace Stopwatch String
-      \ StringBuffer StringSink Symbol Type
-  syntax keyword dartCoreTypedefs   Comparator
-  syntax keyword dartCoreExceptions AbstractClassInstantiationError
-      \ ArgumentError AssertionError CastError ConcurrentModificationError
-      \ Error Exception FallThroughError FormatException
-      \ IntegerDivisionByZeroException NoSuchMethodError NullThrownError
-      \ OutOfMemoryError RangeError RuntimeError StackOverflowError StateError
-      \ TypeError UnimplementedError UnsupportedError
-endif
+" User Types
+syntax match   dartUserType      "\<_\?\u[[:alnum:]_\$]*\>"
+
+" Function highlighting
+syntax match   dartFunction      "\zs\<\(_\?\l[[:alnum:]_\$]*\)\>*\s*\ze("
+
+" SDK libraries
+syntax keyword dartSdkClass     BidirectionalIterator Comparable DateTime
+    \ Duration Expando Function Invocation Iterable Iterator List Map Match
+    \ Object Pattern RegExp RuneIterator Runes Set StackTrace Stopwatch String
+    \ StringBuffer StringSink Symbol Type bool int double num
+syntax keyword dartSdkTypedef   Comparator
+syntax keyword dartSdkException AbstractClassInstantiationError
+    \ ArgumentError AssertionError CastError ConcurrentModificationError
+    \ Error Exception FallThroughError FormatException
+    \ IntegerDivisionByZeroException NoSuchMethodError NullThrownError
+    \ OutOfMemoryError RangeError RuntimeError StackOverflowError StateError
+    \ TypeError UnimplementedError UnsupportedError
 
 " Comments
 syntax keyword dartTodo          contained TODO FIXME XXX
@@ -116,24 +118,29 @@ highlight default link dartLineComment     Comment
 highlight default link dartLineDocComment  Comment
 highlight default link dartShebangLine     Comment
 highlight default link dartConstant        Constant
-highlight default link dartTypedef         Typedef
 highlight default link dartTodo            Todo
 highlight default link dartKeyword         Keyword
-highlight default link dartType            Type
 highlight default link dartInterpolation   PreProc
 highlight default link dartDocLink         SpecialComment
 highlight default link dartSpecialChar     SpecialChar
 highlight default link dartLibrary         Include
 highlight default link dartUri             String
 highlight default link dartCombinator      Keyword
-highlight default link dartCoreClasses     Type
-highlight default link dartCoreTypedefs    Typedef
-highlight default link dartCoreExceptions  Exception
 highlight default link dartMetadata        PreProc
+highlight default link dartSdkTypedef      Typedef
+highlight default link dartTypedef         Typedef
+highlight default link dartSdkException    Exception
+highlight default link dartSdkClass        dartType
+highlight default link dartCoreType        dartType
+highlight default link dartUserType        dartType
+highlight default link dartType            Type
+highlight default link dartFunction        Function
 
 let b:current_syntax = "dart"
 let b:spell_options = "contained"
 
 if g:main_syntax is# 'dart'
   unlet g:main_syntax
+endif
+
 endif

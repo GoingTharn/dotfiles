@@ -1,6 +1,4 @@
-if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'terraform') != -1
-  finish
-endif
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'terraform') == -1
 
 " Only load this file if no other indent file was loaded
 if exists('b:did_indent')
@@ -34,24 +32,19 @@ function! TerraformIndent(lnum)
     return 0
   endif
 
-  " Previous non-blank line should continue the indent level
+  " Usual case is to continue at the same indent as the previous non-blank line.
   let prevlnum = prevnonblank(a:lnum-1)
+  let thisindent = indent(prevlnum)
 
-  " Previous line without comments should continue the indent level
-  let prevline = substitute(getline(prevlnum), '//.*$', '', '')
-  let previndent = indent(prevlnum)
-  let thisindent = previndent
-
-  " Config block starting with [ { ( should increase the indent level
-  if prevline =~# '[\[{\(]\s*$'
+  " If that previous line is a non-comment ending in [ { (, increase the
+  " indent level.
+  let prevline = getline(prevlnum)
+  if prevline !~# '^\s*\(#\|//\)' && prevline =~# '[\[{\(]\s*$'
     let thisindent += &shiftwidth
   endif
 
-  " Current line without comments should continue the indent level
-  let thisline = substitute(getline(a:lnum), '//.*$', '', '')
-
-  " Config block ending with ) } ] should get the indentation
-  " level from the initial config block
+  " If the current line ends a block, decrease the indent level.
+  let thisline = getline(a:lnum)
   if thisline =~# '^\s*[\)}\]]'
     let thisindent -= &shiftwidth
   endif
@@ -61,3 +54,5 @@ endfunction
 
 let &cpoptions = s:cpo_save
 unlet s:cpo_save
+
+endif

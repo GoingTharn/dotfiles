@@ -1,6 +1,4 @@
-if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'yaml') != -1
-  finish
-endif
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'yaml') == -1
 
 " To make this file do stuff, add something like the following (without the
 " leading ") to your ~/.vimrc:
@@ -44,8 +42,8 @@ syn keyword yamlConstant NULL Null null NONE None none NIL Nil nil
 syn keyword yamlConstant TRUE True true YES Yes yes ON On on
 syn keyword yamlConstant FALSE False false NO No no OFF Off off
 
-syn match  yamlKey	"^\s*\zs[^ \t\"]\+\ze\s*:"
-syn match  yamlKey	"^\s*-\s*\zs[^ \t\"\']\+\ze\s*:"
+syn match  yamlKey	"^\s*\zs[^ \t\"\'#]\+\ze\s*:"
+ syn match  yamlKey	"^\s*-\s*\zs[^ \t\"\'#]\+\ze\s*:"
 syn match  yamlAnchor	"&\S\+"
 syn match  yamlAlias	"*\S\+"
 
@@ -63,3 +61,5 @@ hi link yamlInline	Operator
 hi link yamlBlock	Operator
 hi link yamlString	String
 hi link yamlEscape	Special
+
+endif

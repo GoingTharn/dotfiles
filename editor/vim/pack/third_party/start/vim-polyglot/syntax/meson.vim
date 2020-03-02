@@ -1,9 +1,8 @@
-if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'meson') != -1
-  finish
-endif
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'meson') == -1
 
 " Vim syntax file
 " Language:	Meson
+" License:	VIM License
 " Maintainer:	Nirbheek Chauhan <nirbheek.chauhan@gmail.com>
 " Last Change:	2016 Dec 7
 " Credits:	Zvezdan Petkovic <zpetkovic@acm.org>
@@ -31,7 +30,7 @@ endif
 " We need nocompatible mode in order to continue lines with backslashes.
 " Original setting will be restored.
 let s:cpo_save = &cpo
-setlocal cpo&vim
+set cpo&vim
 
 " http://mesonbuild.com/Syntax.html
 syn keyword mesonConditional	elif else if endif
@@ -73,6 +72,7 @@ syn keyword mesonBuiltin
   \ add_project_arguments
   \ add_project_link_arguments
   \ add_test_setup
+  \ alias_target
   \ assert
   \ benchmark
   \ both_libraries
@@ -101,6 +101,7 @@ syn keyword mesonBuiltin
   \ install_headers
   \ install_man
   \ install_subdir
+  \ is_disabler
   \ is_variable
   \ jar
   \ join_paths
@@ -118,6 +119,7 @@ syn keyword mesonBuiltin
   \ subdir
   \ subdir_done
   \ subproject
+  \ summary
   \ target_machine
   \ test
   \ vcs_tag
@@ -164,3 +166,5 @@ let &cpo = s:cpo_save
 unlet s:cpo_save
 
 " vim:set sw=2 sts=2 ts=8 noet:
+
+endif

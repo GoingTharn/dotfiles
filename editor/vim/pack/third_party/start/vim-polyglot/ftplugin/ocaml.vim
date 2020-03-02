@@ -1,6 +1,4 @@
-if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'ocaml') != -1
-  finish
-endif
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'ocaml') == -1
 
 " Language:    OCaml
 " Maintainer:  David Baelde        <firstname.name@ens-lyon.org>
@@ -395,9 +393,9 @@ endfunction
     endif
   endfun
 
-  " This variable contain a dictionnary of list. Each element of the dictionnary
-  " represent an annotation system. An annotation system is a list with :
-  " - annotation file name as it's key
+  " This variable contains a dictionary of lists. Each element of the dictionary
+  " represents an annotation system. An annotation system is a list with:
+  " - annotation file name as its key
   " - annotation file path as first element of the contained list
   " - build path as second element of the contained list
   " - annot_file_last_mod (contain the date of .annot file) as third element
@@ -642,3 +640,5 @@ let &cpoptions=s:cposet
 unlet s:cposet
 
 " vim:sw=2 fdm=indent
+
+endif

@@ -1,6 +1,4 @@
-if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'ansible') != -1
-  finish
-endif
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'ansible') == -1
 
 " Vim syntax file
 " Language: Ansible hosts files
@@ -18,11 +16,11 @@ syn region hostsHeader        start="\v^\s*\[" end="\v\]"
 syn keyword hostsHeaderSpecials children vars containedin=hostsHeader contained
 syn match  hostsComment       "\v^[#;].*$"
 
-highlight link hostsFirstWord        Label
-highlight link hostsHeader           Define
-highlight link hostsComment          Comment
-highlight link hostsHeaderSpecials   Identifier
-highlight link hostsAttributes       Structure
+highlight default link hostsFirstWord        Label
+highlight default link hostsHeader           Define
+highlight default link hostsComment          Comment
+highlight default link hostsHeaderSpecials   Identifier
+highlight default link hostsAttributes       Structure
 
 if exists("g:ansible_attribute_highlight")
   if g:ansible_attribute_highlight =~ 'n'
@@ -33,3 +31,5 @@ if exists("g:ansible_attribute_highlight")
 endif
 
 let b:current_syntax = "ansible_hosts"
+
+endif

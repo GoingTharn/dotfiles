@@ -1,10 +1,8 @@
-if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'vifm') != -1
-  finish
-endif
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'vifm') == -1
 
 " vifm syntax file
 " Maintainer:  xaizek <xaizek@posteo.net>
-" Last Change: June 3, 2019
+" Last Change: July 12, 2019
 " Inspired By: Vim syntax file by Dr. Charles E. Campbell, Jr.
 
 if exists('b:current_syntax')
@@ -17,17 +15,30 @@ let s:cpo_save = &cpo
 set cpo-=C
 
 " General commands
-syntax keyword vifmCommand contained alink apropos bmark bmarks bmgo cds change
-		\ chmod chown clone compare cope[n] co[py] cq[uit] d[elete] delbmarks
-		\ delm[arks] di[splay] dirs e[dit] el[se] empty en[dif] exi[t] file fin[d]
-		\ fini[sh] go[to] gr[ep] h[elp] hideui histnext his[tory] histprev jobs
-		\ locate ls lstrash marks media mes[sages] mkdir m[ove] noh[lsearch] on[ly]
-		\ popd pushd pu[t] pw[d] qa[ll] q[uit] redr[aw] reg[isters] regular rename
-		\ restart restore rlink screen sh[ell] siblnext siblprev sor[t] sp[lit]
-		\ s[ubstitute] tabc[lose] tabm[ove] tabname tabnew tabn[ext] tabp[revious]
-		\ touch tr trashes tree sync undol[ist] ve[rsion] vie[w] vifm vs[plit]
-		\ winc[md] w[rite] wq wqa[ll] xa[ll] x[it] y[ank]
+syntax keyword vifmCommand contained
+		\ alink apropos bmark bmarks bmgo cds change chmod chown clone compare
+		\ cope[n] co[py] cq[uit] d[elete] delbmarks delm[arks] di[splay] dirs e[dit]
+		\ el[se] empty en[dif] exi[t] file fin[d] fini[sh] go[to] gr[ep] h[elp]
+		\ hideui histnext his[tory] histprev jobs locate ls lstrash marks media
+		\ mes[sages] mkdir m[ove] noh[lsearch] on[ly] popd pushd pu[t] pw[d] qa[ll]
+		\ q[uit] redr[aw] reg[isters] regular rename restart restore rlink screen
+		\ sh[ell] siblnext siblprev sor[t] sp[lit] s[ubstitute] tabc[lose] tabm[ove]
+		\ tabname tabnew tabn[ext] tabp[revious] touch tr trashes tree sync
+		\ undol[ist] ve[rsion] vie[w] vifm vs[plit] winc[md] w[rite] wq wqa[ll]
+		\ xa[ll] x[it] y[ank]
 		\ nextgroup=vifmArgs
+syntax keyword vifmCommandCN contained
+		\ alink apropos bmark bmarks bmgo cds change chmod chown clone compare
+		\ cope[n] co[py] cq[uit] d[elete] delbmarks delm[arks] di[splay] dirs e[dit]
+		\ el[se] empty en[dif] exi[t] file fin[d] fini[sh] go[to] gr[ep] h[elp]
+		\ hideui histnext his[tory] histprev jobs locate ls lstrash marks media
+		\ mes[sages] mkdir m[ove] noh[lsearch] on[ly] popd pushd pu[t] pw[d] qa[ll]
+		\ q[uit] redr[aw] reg[isters] regular rename restart restore rlink screen
+		\ sh[ell] siblnext siblprev sor[t] sp[lit] s[ubstitute] tabc[lose] tabm[ove]
+		\ tabname tabnew tabn[ext] tabp[revious] touch tr trashes tree sync
+		\ undol[ist] ve[rsion] vie[w] vifm vs[plit] winc[md] w[rite] wq wqa[ll]
+		\ xa[ll] x[it] y[ank]
+		\ nextgroup=vifmArgsCN
 
 " commands that might be prepended to a command without changing everything else
 syntax keyword vifmPrefixCommands contained windo winrun
@@ -67,7 +78,7 @@ syntax case match
 
 " Builtin functions
 syntax match vifmBuiltinFunction
-		\ '\(chooseopt\|expand\|executable\|filetype\|fnameescape\|getpanetype\|has\|layoutis\|paneisat\|system\|tabpagenr\|term\)\ze('
+		\ '\(chooseopt\|expand\|executable\|extcached\|filetype\|fnameescape\|getpanetype\|has\|layoutis\|paneisat\|system\|tabpagenr\|term\)\ze('
 
 " Operators
 syntax match vifmOperator "\(==\|!=\|>=\?\|<=\?\|\.\|-\|+\|&&\|||\)" skipwhite
@@ -167,11 +178,12 @@ syntax region vifmStatement start='^\(\s\|:\)*'
 " Contained statement with highlighting of angle-brace notation.
 syntax region vifmStatementCN start='\(\s\|:\)*'
 		\ skip='\(\n\s*\\\)\|\(\n\s*".*$\)' end='$' keepend contained
-		\ contains=vifmCommand,vifmCmdCommand,vifmCmdCommandSt,vifmMarkCommandSt
+		\ contains=vifmCommandCN,vifmCmdCommand,vifmCmdCommandSt,vifmMarkCommandSt
 		\,vifmFtCommandStN,vifmCMapAbbr,vifmMap,vifmMapSt,vifmCMapSt,vifmExecute
 		\,vifmComment,vifmInlineComment,vifmNotComment,vifmExprCommandSt,vifmNormalCommandSt
 		\,vifmNotation,vifmCdCommandStN,vifmSetN,vifmArgument,vifmSoCommand
 		\,vifmSoCommandStN,vifmInvertCommand,vifmInvertCommandStN,vifmPrefixCommands
+		\,vifmLetCN
 " Contained statement without highlighting of angle-brace notation.
 syntax region vifmStatementC start='\(\s\|:\)*'
 		\ skip='\(\n\s*\\\)\|\(\n\s*".*$\)' end='$' keepend contained
@@ -306,11 +318,18 @@ syntax region vifmFtBeginning contained
 		\ end='\s' keepend
 		\ contains=vifmFtCommand,vifmPattern
 
-" common highlight for :command arguments
+" common highlight for :command arguments without highlighting of angle-bracket
+" notation
 syntax region vifmArgs start='!\?\zs\(\s*\S\+\|[^a-zA-Z]\)'
 		\ skip='\(\n\s*\\\)\|\(\n\s*".*$\)' end='|\|$'
 		\ contained
 		\ contains=vifmStringInExpr
+" common highlight for :command arguments with highlighting of angle-bracket
+" notation
+syntax region vifmArgsCN start='!\?\zs\(\s*\S\+\|[^a-zA-Z]\)'
+		\ skip='\(\n\s*\\\)\|\(\n\s*".*$\)' end='|\|$'
+		\ contained
+		\ contains=vifmStringInExpr,vifmNotation
 
 syntax region vifmSet
 		\ start='\(\s\|:\)*\<\(se\%[t]\|setg\%[lobal]\|setl\%[ocal]\)\>'
@@ -352,16 +371,24 @@ syntax region vifmSetAssignNSN contained
 		\ extend
 		\ contains=vifmNumber,vifmComment,vifmInlineComment,vifmNotation
 
+" :let command with highlighting of angle-brace notation.
 syntax region vifmLet
 		\ start='^\(\s\|:\)*\<let\>' skip='\(\n\s*\\\)\|\(\n\s*".*$\)' end='$'
 		\ keepend
 		\ contains=vifmLetCommand,vifmEnvVar,vifmString,vifmStringInExpr,vifmComment
 		\,vifmInlineComment,vifmNotComment
+" Contained :let command without highlighting of angle-brace notation.
 syntax region vifmLetC
 		\ start='\<let\>' skip='\(\n\s*\\\)\|\(\n\s*".*$\)' end='$\||'
 		\ keepend
 		\ contains=vifmLetCommand,vifmEnvVar,vifmString,vifmStringInExpr,vifmComment
 		\,vifmInlineComment,vifmNotComment,vifmBuiltinFunction
+" Contained :let command with highlighting of angle-brace notation.
+syntax region vifmLetCN
+		\ start='\<let\>' skip='\(\n\s*\\\)\|\(\n\s*".*$\)' end='$\||'
+		\ keepend
+		\ contains=vifmLetCommand,vifmEnvVar,vifmString,vifmStringInExpr,vifmComment
+		\,vifmInlineComment,vifmNotComment,vifmBuiltinFunction,vifmNotation
 syntax region vifmUnlet
 		\ start='^\(\s\|:\)*\<unl\%[et]\>' skip='\(\n\s*\\\)\|\(\n\s*".*$\)' end='$'
 		\ keepend
@@ -416,6 +443,7 @@ highlight link vifmPatternCommands Statement
 highlight link vifmComment Comment
 highlight link vifmInlineComment Comment
 highlight link vifmCommand Statement
+highlight link vifmCommandCN Statement
 highlight link vifmPrefixCommands Statement
 highlight link vifmCdCommand Statement
 highlight link vifmCmdCommand Statement
@@ -453,3 +481,5 @@ let &cpo = s:cpo_save
 unlet s:cpo_save
 
 " vim: set tabstop=2 softtabstop=2 shiftwidth=2 noexpandtab cinoptions-=(0 :
+
+endif

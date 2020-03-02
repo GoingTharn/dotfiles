@@ -1,6 +1,4 @@
-if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'markdown') != -1
-  finish
-endif
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'markdown') == -1
 
 " Vim syntax file
 " Language:	Markdown
@@ -155,11 +153,11 @@ endif
 
 " Strike through
 if get(g:, 'vim_markdown_strikethrough', 0)
-    syn region mkdStrike matchgroup=mkdStrike start="\%(\~\~\)"    end="\%(\~\~\)"
+    execute 'syn region mkdStrike matchgroup=htmlStrike start="\%(\~\~\)" end="\%(\~\~\)"' . s:concealends
     HtmlHiLink mkdStrike        htmlStrike
 endif
 
-syn cluster mkdNonListItem contains=@htmlTop,htmlItalic,htmlBold,htmlBoldItalic,mkdFootnotes,mkdInlineURL,mkdLink,mkdLinkDef,mkdLineBreak,mkdBlockquote,mkdCode,mkdRule,htmlH1,htmlH2,htmlH3,htmlH4,htmlH5,htmlH6,mkdMath,htmlStrike
+syn cluster mkdNonListItem contains=@htmlTop,htmlItalic,htmlBold,htmlBoldItalic,mkdFootnotes,mkdInlineURL,mkdLink,mkdLinkDef,mkdLineBreak,mkdBlockquote,mkdCode,mkdRule,htmlH1,htmlH2,htmlH3,htmlH4,htmlH5,htmlH6,mkdMath,mkdStrike
 
 "highlighting for Markdown groups
 HtmlHiLink mkdString        String
@@ -186,3 +184,5 @@ let b:current_syntax = "mkd"
 
 delcommand HtmlHiLink
 " vim: ts=8
+
+endif

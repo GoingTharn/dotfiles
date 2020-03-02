@@ -1,6 +1,4 @@
-if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'rst') != -1
-  finish
-endif
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'rst') == -1
 
 " Vim syntax file
 " Language: reStructuredText documentation format
@@ -94,7 +92,14 @@ execute 'syn match rstSubstitutionDefinition contained' .
       \ ' /|.*|\_s\+/ nextgroup=@rstDirectives'
 
 function! s:DefineOneInlineMarkup(name, start, middle, end, char_left, char_right)
-  execute 'syn match rstEscape'.a:name.' +\\\\\|\\'.a:start.'+'.' contained'
+  " Only escape the first char of a multichar delimiter (e.g. \* inside **)
+  if a:start[0] == '\'
+    let first = a:start[0:1]
+  else
+    let first = a:start[0]
+  endif
+
+  execute 'syn match rstEscape'.a:name.' +\\\\\|\\'.first.'+'.' contained'
 
   execute 'syn region rst' . a:name .
         \ ' start=+' . a:char_left . '\zs' . a:start .
@@ -170,7 +175,7 @@ syn match   rstStandaloneHyperlink  contains=@NoSpell
       \ "\<\%(\%(\%(https\=\|file\|ftp\|gopher\)://\|\%(mailto\|news\):\)[^[:space:]'\"<>]\+\|www[[:alnum:]_-]*\.[[:alnum:]_-]\+\.[^[:space:]'\"<>]\+\)[[:alnum:]/]"
 
 syn region rstCodeBlock contained matchgroup=rstDirective
-      \ start=+\%(sourcecode\|code\%(-block\)\=\)::\s\+.*\_s*\n\ze\z(\s\+\)+
+      \ start=+\%(sourcecode\|code\%(-block\)\=\)::\s*\(\S*\)\?\s*\n\%(\s*:.*:\s*.*\s*\n\)*\n\ze\z(\s\+\)+
       \ skip=+^$+
       \ end=+^\z1\@!+
       \ contains=@NoSpell
@@ -285,3 +290,5 @@ let b:current_syntax = "rst"
 
 let &cpo = s:cpo_save
 unlet s:cpo_save
+
+endif

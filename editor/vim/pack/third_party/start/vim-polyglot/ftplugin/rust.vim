@@ -1,11 +1,8 @@
-if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'rust') != -1
-  finish
-endif
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'rust') == -1
 
 " Language:     Rust
 " Description:  Vim ftplugin for Rust
 " Maintainer:   Chris Morgan <me@chrismorgan.info>
-" Maintainer:   Kevin Ballard <kevin@sb.org>
 " Last Change:  June 08, 2016
 " For bugs, patches and license go to https://github.com/rust-lang/rust.vim
 
@@ -39,7 +36,7 @@ if get(g:, 'rust_bang_comment_leader', 0)
     " leaders. I'm fairly sure that's a Vim bug.
     setlocal comments=s1:/*,mb:*,ex:*/,s0:/*,mb:\ ,ex:*/,:///,://!,://
 else
-    setlocal comments=s0:/*!,m:\ ,ex:*/,s1:/*,mb:*,ex:*/,:///,://!,://
+    setlocal comments=s0:/*!,ex:*/,s1:/*,mb:*,ex:*/,:///,://!,://
 endif
 setlocal commentstring=//%s
 setlocal formatoptions-=t formatoptions+=croqnl
@@ -141,7 +138,7 @@ command! -bar RustInfoToClipboard call rust#debugging#InfoToClipboard()
 command! -bar -nargs=1 RustInfoToFile call rust#debugging#InfoToFile(<f-args>)
 
 " See |:RustTest| for docs
-command! -buffer -nargs=* -bang RustTest call rust#Test(<bang>0, <q-args>)
+command! -buffer -nargs=* -count -bang RustTest call rust#Test(<q-mods>, <count>, <bang>0, <q-args>)
 
 if !exists("b:rust_last_rustc_args") || !exists("b:rust_last_args")
     let b:rust_last_rustc_args = []
@@ -195,7 +192,7 @@ augroup END
 
 setlocal matchpairs+=<:>
 " For matchit.vim (rustArrow stops `Fn() -> X` messing things up)
-let b:match_skip = 's:comment\|string\|rustArrow'
+let b:match_skip = 's:comment\|string\|rustCharacter\|rustArrow'
 
 " vint: -ProhibitAbbreviationOption
 let &cpo = s:save_cpo
@@ -203,3 +200,5 @@ unlet s:save_cpo
 " vint: +ProhibitAbbreviationOption
 
 " vim: set et sw=4 sts=4 ts=8:
+
+endif

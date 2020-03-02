@@ -1,8 +1,14 @@
-function! s:setf(filetype) abort
-  if &filetype !=# a:filetype
-    let &filetype = a:filetype
-  endif
-endfunction
+if !exists('g:markdown_enable_spell_checking')
+  let g:markdown_enable_spell_checking = 0
+end
+
+if !exists('g:markdown_enable_input_abbreviations')
+  let g:markdown_enable_input_abbreviations = 0
+end
+
+if !exists('g:markdown_enable_mappings')
+  let g:markdown_enable_mappings = 0
+end
 
 " Enable jsx syntax by default
 if !exists('g:jsx_ext_required')
@@ -50,8 +56,9 @@ augroup filetypedetect
 
 
   " elixir
-  au BufRead,BufNewFile *.ex,*.exs call s:setf('elixir')
-  au BufRead,BufNewFile *.eex call s:setf('eelixir')
+  au BufRead,BufNewFile *.ex,*.exs set filetype=elixir
+  au BufRead,BufNewFile *.eex,*.leex set filetype=eelixir
+  au BufRead,BufNewFile mix.lock set filetype=elixir
 
   " fish
   autocmd BufRead,BufNewFile *.fish setfiletype fish
@@ -82,15 +89,12 @@ augroup filetypedetect
   " swift
   autocmd BufNewFile,BufRead *.swift set filetype=swift
 
-
   "jinja
   autocmd BufNewFile,BufRead *.jinja2,*.j2,*.jinja,*.nunjucks,*.nunjs,*.njk set ft=jinja
-augroup END
 
-" Fix for https://github.com/sheerun/vim-polyglot/issues/236#issuecomment-387984954
-if (!exists('g:graphql_javascript_tags'))
-  let g:graphql_javascript_tags = ['gql', 'graphql', 'Relay.QL']
-endif
+  "jsx
+  au BufNewFile,BufRead *.jsx     setf javascriptreact
+augroup END
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'acpiasl') == -1
   augroup filetypedetect
   " acpiasl, from asl.vim in martinlroth/vim-acpi-asl
@@ -287,6 +291,24 @@ if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'dart') == -1
   augroup filetypedetect
   " dart, from dart.vim in dart-lang/dart-vim-plugin
 autocmd BufRead,BufNewFile *.dart set filetype=dart
+
+function! s:DetectShebang()
+  if did_filetype() | return | endif
+  if getline(1) == '#!/usr/bin/env dart'
+    setlocal filetype=dart
+  endif
+endfunction
+
+autocmd BufRead * call s:DetectShebang()
+  augroup end
+endif
+
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'dhall') == -1
+  augroup filetypedetect
+  " dhall, from dhall.vim in vmchale/dhall-vim
+augroup dhall
+    autocmd BufNewFile,BufRead *.dhall set filetype=dhall
+augroup END
   augroup end
 endif
 
@@ -328,6 +350,8 @@ endif
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'dockerfile') == -1
   augroup filetypedetect
   " dockerfile, from Dockerfile.vim in ekalinin/Dockerfile.vim
+" vint: -ProhibitAutocmdWithNoGroup
+
 " Dockerfile
 autocmd BufRead,BufNewFile [Dd]ockerfile set ft=Dockerfile
 autocmd BufRead,BufNewFile Dockerfile* set ft=Dockerfile
@@ -340,6 +364,8 @@ endif
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'dockerfile') == -1
   augroup filetypedetect
   " dockerfile, from docker-compose.vim in ekalinin/Dockerfile.vim
+" vint: -ProhibitAutocmdWithNoGroup
+
 " docker-compose.yml
 autocmd BufRead,BufNewFile docker-compose*.{yaml,yml}* set ft=yaml.docker-compose
   augroup end
@@ -493,6 +519,37 @@ unlet s:cpo_save
   augroup end
 endif
 
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'graphql') == -1
+  augroup filetypedetect
+  " graphql, from graphql.vim in jparise/vim-graphql:_ALL
+" Copyright (c) 2016-2019 Jon Parise <jon@indelible.org>
+"
+" Permission is hereby granted, free of charge, to any person obtaining a copy
+" of this software and associated documentation files (the "Software"), to
+" deal in the Software without restriction, including without limitation the
+" rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+" sell copies of the Software, and to permit persons to whom the Software is
+" furnished to do so, subject to the following conditions:
+"
+" The above copyright notice and this permission notice shall be included in
+" all copies or substantial portions of the Software.
+"
+" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+" IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+" FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+" AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+" LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+" FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+" IN THE SOFTWARE.
+"
+" Language: GraphQL
+" Maintainer: Jon Parise <jon@indelible.org>
+
+" vint: -ProhibitAutocmdWithNoGroup
+au BufRead,BufNewFile *.graphql,*.graphqls,*.gql setfiletype graphql
+  augroup end
+endif
+
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'gradle') == -1
   augroup filetypedetect
   " gradle, from gradle.vim in tfnico/vim-gradle
@@ -504,8 +561,7 @@ endif
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'haml') == -1
   augroup filetypedetect
   " haml, from haml.vim in sheerun/vim-haml
-autocmd BufNewFile,BufRead *.sass setf sass
-autocmd BufNewFile,BufRead *.scss setf scss
+autocmd BufNewFile,BufRead *.haml,*.hamlbars,*.hamlc setf haml
   augroup end
 endif
 
@@ -513,8 +569,8 @@ if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'handlebars') ==
   augroup filetypedetect
   " handlebars, from mustache.vim in mustache/vim-mustache-handlebars
 if has("autocmd")
-  au  BufNewFile,BufRead *.mustache,*.hogan,*.hulk,*.hjs set filetype=html.mustache syntax=mustache | runtime! ftplugin/mustache.vim ftplugin/mustache*.vim ftplugin/mustache/*.vim
-  au  BufNewFile,BufRead *.handlebars,*.hbs set filetype=html.handlebars syntax=mustache | runtime! ftplugin/mustache.vim ftplugin/mustache*.vim ftplugin/mustache/*.vim
+  au  BufNewFile,BufRead *.mustache,*.hogan,*.hulk,*.hjs set filetype=html.mustache syntax=mustache | runtime! ftplugin/mustache.vim ftplugin/mustache*.vim ftplugin/mustache/*.vim indent/handlebars.vim
+  au  BufNewFile,BufRead *.handlebars,*.hdbs,*.hbs,*.hb set filetype=html.handlebars syntax=mustache | runtime! ftplugin/mustache.vim ftplugin/mustache*.vim ftplugin/mustache/*.vim
 endif
   augroup end
 endif
@@ -549,6 +605,13 @@ autocmd BufNewFile,BufRead *.hcl set filetype=hcl
 autocmd BufNewFile,BufRead *.nomad set filetype=hcl
 autocmd BufNewFile,BufRead *.tf set filetype=hcl
 autocmd BufNewFile,BufRead Appfile set filetype=hcl
+  augroup end
+endif
+
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'helm') == -1
+  augroup filetypedetect
+  " helm, from helm.vim in towolf/vim-helm
+autocmd BufRead,BufNewFile */templates/*.yaml,*/templates/*.tpl set ft=helm
   augroup end
 endif
 
@@ -599,10 +662,10 @@ autocmd BufNewFile,BufRead,StdinReadPost *
   augroup end
 endif
 
-if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'jasmine') == -1
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'javascript') == -1
   augroup filetypedetect
-  " jasmine, from jasmine.vim in glanotte/vim-jasmine
-autocmd BufNewFile,BufRead *Spec.js,*_spec.js set filetype=jasmine.javascript syntax=jasmine
+  " javascript, from flow.vim in pangloss/vim-javascript:_JAVASCRIPT
+autocmd BufNewFile,BufRead *.flow setfiletype flow
   augroup end
 endif
 
@@ -615,11 +678,8 @@ fun! s:SelectJavascript()
   endif
 endfun
 
-augroup javascript_syntax_detection
-  autocmd!
-  autocmd BufNewFile,BufRead *.{js,mjs,jsm,es,es6},Jakefile setfiletype javascript
-  autocmd BufNewFile,BufRead * call s:SelectJavascript()
-augroup END
+autocmd BufNewFile,BufRead *.{js,mjs,jsm,es,es6},Jakefile setfiletype javascript
+autocmd BufNewFile,BufRead * call s:SelectJavascript()
   augroup end
 endif
 
@@ -704,15 +764,15 @@ endif
 
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'llvm') == -1
   augroup filetypedetect
-  " llvm, from llvm-lit.vim in rhysd/vim-llvm
-au BufRead,BufNewFile lit.*cfg set filetype=python
+  " llvm, from llvm.vim in rhysd/vim-llvm
+au BufRead,BufNewFile *.ll set filetype=llvm
   augroup end
 endif
 
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'llvm') == -1
   augroup filetypedetect
-  " llvm, from llvm.vim in rhysd/vim-llvm
-au BufRead,BufNewFile *.ll set filetype=llvm
+  " llvm, from llvm-lit.vim in rhysd/vim-llvm
+au BufRead,BufNewFile lit.*cfg set filetype=python
   augroup end
 endif
 
@@ -751,7 +811,7 @@ endif
 
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'markdown') == -1
   augroup filetypedetect
-  " markdown, from markdown.vim in plasticboy/vim-markdown:_SYNTAX
+  " markdown, from markdown.vim in plasticboy/vim-markdown:_NOAFTER
 if !has('patch-7.4.480')
     " Before this patch, vim used modula2 for .md.
     au! filetypedetect BufRead,BufNewFile *.md
@@ -766,8 +826,10 @@ endif
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'mathematica') == -1
   augroup filetypedetect
   " mathematica, from mma.vim in voldikss/vim-mma
-autocmd BufNewFile,BufRead *.wl set filetype=mma
-autocmd BufNewFile,BufRead *.wls set filetype=mma
+autocmd BufNewFile,BufRead *.wl  setfiletype mma
+autocmd BufNewFile,BufRead *.wls setfiletype mma
+autocmd BufNewFile,BufRead *.nb  setfiletype mma
+autocmd BufNewFile,BufRead *.m   setfiletype mma
   augroup end
 endif
 
@@ -789,6 +851,7 @@ if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'meson') == -1
   " meson, from meson.vim in mesonbuild/meson:_ALL:/data/syntax-highlighting/vim/
 au BufNewFile,BufRead meson.build set filetype=meson
 au BufNewFile,BufRead meson_options.txt set filetype=meson
+au BufNewFile,BufRead *.wrap set filetype=dosini
   augroup end
 endif
 
@@ -847,7 +910,7 @@ endif
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'ocaml') == -1
   augroup filetypedetect
   " ocaml, from dune.vim in rgrinberg/vim-ocaml
-au BufRead,BufNewFile jbuild,dune,dune-project set ft=dune
+au BufRead,BufNewFile jbuild,dune,dune-project,dune-workspace set ft=dune
   augroup end
 endif
 
@@ -882,7 +945,7 @@ endif
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'ocaml') == -1
   augroup filetypedetect
   " ocaml, from opam.vim in rgrinberg/vim-ocaml
-au BufNewFile,BufRead opam,*.opam set filetype=opam
+au BufNewFile,BufRead opam,*.opam,*.opam.template set filetype=opam
   augroup end
 endif
 
@@ -1031,8 +1094,9 @@ endif
 
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'puppet') == -1
   augroup filetypedetect
-  " puppet, from puppet.vim in voxpupuli/vim-puppet
+  " puppet, from puppet.vim in rodjek/vim-puppet
 au! BufRead,BufNewFile *.pp setfiletype puppet
+au! BufRead,BufNewFile *.epp setfiletype embeddedpuppet
 au! BufRead,BufNewFile Puppetfile setfiletype ruby
   augroup end
 endif
@@ -1081,7 +1145,24 @@ endif
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'racket') == -1
   augroup filetypedetect
   " racket, from racket.vim in wlangstroth/vim-racket
-au BufRead,BufNewFile *.rkt,*.rktl setf racket
+" 
+let g:racket_hash_lang_regexp = '^#lang\s\+\([^][)(}{[:space:]]\+\)'
+
+" Tries to detect filetype from #lang line; defaults to ft=racket.
+function! RacketDetectHashLang()
+  let old_ft = &filetype
+
+  let matches = matchlist(getline(1), g:racket_hash_lang_regexp)
+  if ! empty(matches)
+    let &l:filetype = matches[1]
+  endif
+
+  if &filetype == old_ft
+    set filetype=racket
+  endif
+endfunction
+
+au BufRead,BufNewFile *.rkt,*.rktl call RacketDetectHashLang()
   augroup end
 endif
 
@@ -1089,6 +1170,13 @@ if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'raml') == -1
   augroup filetypedetect
   " raml, from raml.vim in IN3D/vim-raml
 au BufRead,BufNewFile *.raml set ft=raml
+  augroup end
+endif
+
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'razor') == -1
+  augroup filetypedetect
+  " razor, from razor.vim in adamclerk/vim-razor
+autocmd BufNewFile,BufRead *.cshtml setf razor
   augroup end
 endif
 
@@ -1100,17 +1188,6 @@ if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'reason') == -1
 au BufRead,BufNewFile *.re set filetype=reason
 au BufRead,BufNewFile *.rei set filetype=reason
 au BufNewFile,BufRead .merlin       set ft=merlin
-  augroup end
-endif
-
-if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'rego') == -1
-  augroup filetypedetect
-  " rego, from rego.vim in tsandall/vim-rego
-autocmd BufRead,BufNewFile *.rego set filetype=rego
-
-" Use # as a comment prefix
-setlocal comments=b:#,fb:-
-setlocal commentstring=#\ %s
   augroup end
 endif
 
@@ -1224,6 +1301,9 @@ au BufNewFile,BufRead [rR]outefile		call s:setf('ruby')
 " SimpleCov
 au BufNewFile,BufRead .simplecov		call s:setf('ruby')
 
+" Sorbet RBI files
+au BufNewFile,BufRead *.rbi		        call s:setf('ruby')
+
 " Thor
 au BufNewFile,BufRead [tT]horfile,*.thor	call s:setf('ruby')
 
@@ -1240,7 +1320,10 @@ if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'rust') == -1
 " vint: -ProhibitAutocmdWithNoGroup
 
 autocmd BufRead,BufNewFile *.rs call s:set_rust_filetype()
-autocmd BufRead,BufNewFile Cargo.toml setf FALLBACK cfg
+
+if has('patch-8.0.613')
+    autocmd BufRead,BufNewFile Cargo.toml setf FALLBACK cfg
+endif
 
 function! s:set_rust_filetype() abort
     if &filetype !=# 'rust'
@@ -1309,6 +1392,13 @@ autocmd BufNewFile,BufReadPost *.stylus set filetype=stylus
   augroup end
 endif
 
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'svelte') == -1
+  augroup filetypedetect
+  " svelte, from svelte.vim in evanleck/vim-svelte
+au BufRead,BufNewFile *.svelte setfiletype svelte
+  augroup end
+endif
+
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'sxhkd') == -1
   augroup filetypedetect
   " sxhkd, from sxhkdrc.vim in baskerville/vim-sxhkdrc
@@ -1337,6 +1427,8 @@ endif
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'terraform') == -1
   augroup filetypedetect
   " terraform, from terraform.vim in hashivim/vim-terraform
+" By default, Vim associates .tf files with TinyFugue - tell it not to.
+silent! autocmd! filetypedetect BufRead,BufNewFile *.tf
 autocmd BufRead,BufNewFile *.tf set filetype=terraform
 autocmd BufRead,BufNewFile *.tfvars set filetype=terraform
 autocmd BufRead,BufNewFile *.tfstate set filetype=json
@@ -1362,6 +1454,18 @@ if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'thrift') == -1
   augroup filetypedetect
   " thrift, from thrift.vim in solarnz/thrift.vim
 au BufNewFile,BufRead *.thrift setlocal filetype=thrift
+  augroup end
+endif
+
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'tmux') == -1
+  augroup filetypedetect
+  " tmux, from tmux.vim in ericpruitt/tmux.vim:_ALL:/vim/
+" Language: tmux(1) configuration file
+" URL: https://github.com/ericpruitt/tmux.vim/
+" Maintainer: Eric Pruitt <eric.pruitt@gmail.com>
+" Last Changed: 2017 Mar 10
+
+autocmd BufNewFile,BufRead {.,}tmux.conf setfiletype tmux
   augroup end
 endif
 
@@ -1400,18 +1504,29 @@ endif
 
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'typescript') == -1
   augroup filetypedetect
-  " typescript, from typescript.vim in leafgarland/typescript-vim
-" use `set filetype` to override default filetype=xml for *.ts files
-autocmd BufNewFile,BufRead *.ts  set filetype=typescript
-" use `setfiletype` to not override any other plugins like ianks/vim-tsx
-autocmd BufNewFile,BufRead *.tsx setfiletype typescript
+  " typescript, from typescript.vim in HerringtonDarkholme/yats.vim
+autocmd BufNewFile,BufRead *.ts setlocal filetype=typescript
+  augroup end
+endif
+
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'typescript') == -1
+  augroup filetypedetect
+  " typescript, from typescriptreact.vim in HerringtonDarkholme/yats.vim
+autocmd BufNewFile,BufRead *.tsx setlocal filetype=typescriptreact
+  augroup end
+endif
+
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'v') == -1
+  augroup filetypedetect
+  " v, from vlang.vim in ollykel/v-vim
+au BufNewFile,BufRead *.v set filetype=vlang
+au BufNewFile,BufRead *.v set syntax=vlang
   augroup end
 endif
 
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'vala') == -1
   augroup filetypedetect
   " vala, from vala.vim in arrufat/vala.vim
-autocmd BufRead *.vala,*.vapi set efm=%f:%l.%c-%[%^:]%#:\ %t%[%^:]%#:\ %m
 au BufRead,BufNewFile *.vala,*.vapi,*.valadoc setfiletype vala
   augroup end
 endif
@@ -1425,16 +1540,17 @@ endif
 
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'vifm') == -1
   augroup filetypedetect
-  " vifm, from vifm-rename.vim in vifm/vifm.vim
-autocmd BufRead,BufNewFile vifm.rename* :set filetype=vifm-rename
+  " vifm, from vifm.vim in vifm/vifm.vim
+autocmd BufRead,BufNewFile vifmrc :set filetype=vifm
+autocmd BufRead,BufNewFile *vifm/colors/* :set filetype=vifm
+autocmd BufRead,BufNewFile *.vifm :set filetype=vifm
   augroup end
 endif
 
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'vifm') == -1
   augroup filetypedetect
-  " vifm, from vifm.vim in vifm/vifm.vim
-autocmd BufRead,BufNewFile vifmrc :set filetype=vifm
-autocmd BufRead,BufNewFile *vifm/colors/* :set filetype=vifm
+  " vifm, from vifm-rename.vim in vifm/vifm.vim
+autocmd BufRead,BufNewFile vifm.rename* :set filetype=vifm-rename
   augroup end
 endif
 
@@ -1457,6 +1573,13 @@ if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'xdc') == -1
   " xdc, from xdc.vim in amal-khailtash/vim-xdc-syntax
 " xdc
 autocmd BufNewFile,BufRead *.xdc setfiletype xdc
+  augroup end
+endif
+
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'zephir') == -1
+  augroup filetypedetect
+  " zephir, from zephir.vim in xwsoul/vim-zephir
+autocmd BufNewFile,BufReadPost *.zep set filetype=zephir
   augroup end
 endif
 
