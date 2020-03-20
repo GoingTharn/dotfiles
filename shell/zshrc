@@ -179,4 +179,3 @@ else
 fi
 
 source ~/.zsh_aliases
-export PATH=$PATH:/opt/pycharm-2019.2.3/bin:~/bin

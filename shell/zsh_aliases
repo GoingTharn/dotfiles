@@ -1,3 +1,18 @@
 alias lt="cd ~/repos/leaftrade-2.0"
 alias tf=terraform
 alias vi=nvim
+
+function connect() {
+  if [ "$2" != "" ]
+  then
+    USER=$2
+  else
+    USER=ubuntu
+  fi
+  if [ "$1" != "" ]
+  then
+    echo "Connecting to $1"
+    ssh -i ~/.ssh/john-key $USER@"$1"
+  fi
+}
+
