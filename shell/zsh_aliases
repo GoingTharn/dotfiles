@@ -1,4 +1,5 @@
 alias lt="cd ~/repos/leaftrade-2.0"
+alias af="cd ~/repos/docker-airflow-base"
 alias tf=terraform
 alias vi=nvim
 
@@ -15,4 +16,30 @@ function connect() {
     ssh -i ~/.ssh/john-key $USER@"$1"
   fi
 }
+
+function plan() {
+  USAGE="Usage: plan env tag"
+  if [ "$1" != "" ] && [ "$2" != "" ]
+  then
+    ENV=$1
+    TAG=$2
+    cd $TF_ENVS/$ENV
+    tf plan -var-file=$ENV.tfvars -var="ecr_tag=${TAG}" -out=$TFPLANS/$ENV.plan
+  else
+    echo "Variable missing and required. ${USAGE}"
+  fi
+}
+
+
+function apply() {
+  USAGE="Usage: apply env"
+  if [ "$1" != "" ]
+  then
+    ENV=$1
+    tf apply $TFPLANS/$ENV.plan
+  else
+    echo "Environment missing and required. ${USAGE}"
+  fi
+}
+
 
