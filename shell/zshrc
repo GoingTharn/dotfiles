@@ -179,4 +179,6 @@ else
   export LSCOLORS='ExFxBxDxCxegedabagacad'
 fi
 
+. ~/bin/z/z.sh
+
 source ~/.zsh_aliases

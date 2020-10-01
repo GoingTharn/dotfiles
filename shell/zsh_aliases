@@ -42,4 +42,5 @@ function apply() {
   fi
 }
 
-
+alias scan="alias | rg"
+alias undo="reset HEAD~"

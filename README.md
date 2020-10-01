@@ -165,6 +165,7 @@ shell experience in general.
   when running `CTRL-T` from `fzf`.
 * [`ctags`][universal-ctags]: Universal ctags help you jump around function
   definitions in a code base.
+* [`rupa/z`][rupa/z]: cd db
 
 You should install all of these independently of this dotfile repo.
 (This also includes figuring out how to install them.)
@@ -239,3 +240,4 @@ chsh -s $(which bash) # optionally change shell back to bash
 [universal-ctags]: <https://github.com/universal-ctags/ctags>
 [itermcolors]: <https://raw.githubusercontent.com/altercation/solarized/e40cd4130e2a82f9b03ada1ca378b7701b1a9110/iterm2-colors-solarized/Solarized%20Dark.itermcolors>
 [powerlevel10k]: <https://github.com/romkatv/powerlevel10k>
+[rupa/z]: <https://github.com/rupa/z>
