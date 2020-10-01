@@ -36,6 +36,7 @@ _append_to_path() {
 }
 
 _prepend_to_path /usr/local/bin
+_prepend_to_path /usr/bin
 _prepend_to_path $HOME/.local/bin
 
 export EDITOR='vim'
