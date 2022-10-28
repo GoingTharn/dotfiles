@@ -2,25 +2,39 @@
 
 These are my personal dotfiles, stolen from Andrew. 
 
-![Screenshot of my dotfiles](.images/screenshot.png)
+```
+curl -L andrew.cloud/dotfiles.sh | sh
+```
 
-These dotfiles are intended for use with zsh, [oh-my-zsh][oh-my-zsh], and the
-[solarized][solarized] colorscheme.
+![Screenshot of my dotfiles](images/screenshot.png)
+
+These dotfiles are intended for use with zsh, [oh-my-zsh][], and the
+[solarized][] colorscheme.
 The configuration uses powerline-based status bars for vim and tmux and
 [Powerlevel10k][powerlevel10k] as its zsh theme.
 
-## Prequisites
+## Try it out in Docker
+
+These dotfiles are available as a [Docker image][docker-hub].
+It's the easiest way to emulate the development environment that I normally use.
+To spin up a new container, install Docker and run the command below.
+
+```shell
+docker run -it docker.io/liuandrewk/dotfiles
+```
+
+You should also make sure to have Powerline fonts available in your terminal.
+It'll otherwise work out of the box.
+
+## Prerequisites
 
 These dotfiles contain the following software dependencies:
 
-* Linux or MacOS
-* Vim 8.0+ (or Neovim)
+* Linux, MacOS, or WSL
+* Neovim 0.7 (preferred) or Vim 8
 
 There currently is no Windows support.
 However, MacOS and most flavors of Linux should work fine.
-These dotfiles use Vim's new [native package manager][vim8] in order to
-distribute modules in an organized fashion, so versions of Vim before 8 will not
-function properly.
 
 ## Setting up your Local Machine
 
@@ -31,8 +45,8 @@ These setup instructions only need to be done once on a local machine._
 New machines require two tasks to be done which are not part of the setup
 script:
 
-* installing (and using) Powerline/Font Awesome-compatible fonts, and
-* using the Solarized colorscheme.
+* Installing (and using) Powerline/FontAwesome-compatible fonts.
+* Using the Solarized colorscheme.
 
 ### MacOS
 
@@ -43,42 +57,22 @@ This font aggregator is nice in the sense that it collects many different glyphs
 from various sources.
 (We'll be using a lot of different symbols!)
 
-You'll first want to install a pre-patched font.
-There are multiple ways to do this.
-If you prefer to use the browser, download `Droid Sans Mono Nerd Font
-Complete.otf` from the Nerd Fonts [prepatched fonts folder][prepatched].
-Clicking on the file from Finder after downloading it should be sufficient.
-
-Alternatively, if you have Homebrew, you can install it from the command line.
+Follow the [Powerlevel10k font instructions][p10k-fonts] to install the proper
+fonts.
 
 ```shell
-brew tap homebrew/cask-fonts
-brew cask install font-droidsansmono-nerd-font
+p10k configure
 ```
 
-Next, you'll want to configure iTerm to use the new font.
-
-1. Go to the `Text` tab in your current iTerm profile and select the option to
-   `Use a different font for non-ASCII text`.
-2. In the same tab, select `Droid Sans Mono Nerd Font` as the font for non-ASCII
-   text.
-
-The Powerline symbols included in the font might not align well.
-As a remedy, iTerm has a `Use built-in Powerline glyphs` option to substitute
-the characters with its own built-in alternative characters.
-I'd recommend checking that option.
-
 The Text section of my iTerm settings looks like the picture below.
-For ASCII text, I use `Menlo Regular` (which is a native font) and use `14pt`
-for all font types.
 
-![Text section of iTerm settings](.images/iterm_options.png)
+![Text section of iTerm settings](images/iterm_options.png)
 
 #### Solarized on iTerm
 
 The Solarized colors for iTerm can be found in its
 [official repository][solarized-repo].
-Import [`Solarized Dark.itermcolors`][itermcolors] as a colorscheme for iTerm.
+(You won't need to download it.)
 In the `Colors` section of your iTerm profile, use the `Solarized Dark` preset.
 
 #### Enable Copy/Paste in Tmux
@@ -98,6 +92,16 @@ Note that this only applies to machines running MacOS.
 If using iTerm, setting `Scroll wheel sends arrow keys when in alternate screen
 mode.` to `Yes` will allow trackpad scrolling while in Vim.
 The setting can be found in the advanced preferences.
+
+#### Enabling the Meta Key on iTerm
+
+If using iTerm, you may want to set the option key mode to `Esc+` to make it be
+a meta key.
+It's used for a few shortcuts, such as resizing tmux panes.
+
+#### Bold Text Color
+
+Uncheck the `Brighten Bold Text` option in iTerm if all bold text is gray.
 
 ### Linux
 
@@ -120,57 +124,33 @@ This is Gnome, since I'm running with it for a while.
 After downloading the font, install Gnome Tweak UI. 
 Change the MonoSpaceFont to be Droid Sans Mono Nerd. Keep the default font terminal on the Preferences. 
 
-
 #### Solarized on Ubuntu Terminal
 
 To get Solarized on the Ubuntu Terminal, you will want to create a new profile.
-Then you will follow the instructions in
-[gnome-terminal-colors-solarized][gnome-terminal-colors-solarized] to set the
-color scheme.
-
-Start by creating a new profile on the terminal emulator.
-
-![Creating a new terminal profile](.images/new_profile.png)
-
-Set that profile to be the default profile upon terminal open.
-
-![Using solarized as the default terminal](.images/new_terminal.png)
-
-Finally clone the
-[gnome-terminal-colors-solarized repo][gnome-terminal-colors-solarized] and
-follow its installation instructions.
-
-```shell
-git clone https://github.com/Anthony25/gnome-terminal-colors-solarized.git
-cd gnome-terminal-colors-solarized
-./set_dark.sh
-```
+The solarized colorscheme should be a default option on most modern terminals.
+If it's not default, follow the instructions in
+[gnome-terminal-colors-solarized][] to set the color scheme.
 
 ### Other optional tools
 
 There are a few recommended (but optional) tools you can install to improve your
 shell experience in general.
 
-* [`diff-so-fancy`][diff-so-fancy]: Diff-so-fancy is a diffing tool that gives a
-  nicer diff than the git default.
+* [`delta`][delta]: Delta is a diffing tool that works great with git.
 * [`rg`][rg]: Ripgrep is a faster alternative over `ag`, `ack`, and `grep`.
-  It has the exact same usage as `ag` and is likely more preferable in all use
-  cases.
-* [`fzf`][fzf]: Fzf is a general purpose fuzzy funder.
-* [`fd`][fd]: `fd` is a faster alternative to the `find` command.
-  It works very well when paired with `fzf`.
-* `tree`: This will display the directory structure as a tree. We use it to
-  improve the output of `ALT-C` from `fzf`.
+* [`fzf`][fzf]: Fzf is a highly performant fuzzy finder.
+* [`fd`][fd]: `fd` is a faster alternative to the `find` command. It works very
+  well when paired with `fzf`.
+* [`exa`][exa]: An improved version of `ls`. We use its tree feature to improve
+  the output of `<alt-c>` from `fzf` and directory tab completion.
 * [`bat`][bat]: An improved version of `cat`. We use it for the file previews
-  when running `CTRL-T` from `fzf`.
+  when running `<ctrl-t>` from `fzf`.
 * [`ctags`][universal-ctags]: Universal ctags help you jump around function
   definitions in a code base.
 * [`rupa/z`][rupa/z]: cd db
 
 You should install all of these independently of this dotfile repo.
-(This also includes figuring out how to install them.)
-Most of these are Homebrew packages on MacOS (or a target in most Linux package
-managers).
+Figuring out how to install them is left as an exercise for the reader.
 
 ## Installation
 
@@ -184,13 +164,13 @@ curl https://dev.goingtharn.com/dotfiles.sh | sh
 wget -qO- https://dev.goingtharn.com/dotfiles.sh | sh
 ```
 
-Alternatively, you can manually clone the repository and run the `configure.sh`
+Alternatively, you can manually clone the repository and run the `setup.sh`
 script.
 
 ```shell
-git clone --depth=1 git@github.com:GoingTharn/dotfiles.git ~/.dotfiles
+git clone --filter=blob:none git@github.com:GoingTharn/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
-./configure.sh -t build
+./setup.sh -t build
 ```
 
 You will also likely need to manually change your shell to `zsh` if you are
@@ -203,12 +183,27 @@ chsh -s $(which zsh)
 ## Customizing
 
 You can customize zsh, vim, tmux, and git for each specific machine.
-Just put any additional configurations in `~/.zshrc.local`, `~/.vimrc.local`,
-or `~/.tmux.conf.local`.
-Sample local configs are included in this repo.
+Just put any additional configurations in the following files:
+
+* `~/.zshrc.local`
+* `~/.vimrc.local`
+* `~/.tmux.conf.local`
+
 Custom git configurations can be placed in `~/.gitconfig`.
 The normal git config file is not put under version control, so it's safe to put
 machine-specific tokens in it.
+
+## Docker
+
+If you'd like to build the dotfiles as a Docker image locally, run the following
+command:
+
+```shell
+docker build -t liuandrewk/dotfiles .
+```
+
+The image will be a bit large (1 GB), so it's best saved for development
+purposes only.
 
 ## Teardown
 
@@ -219,18 +214,17 @@ If you wish to remove those, you will have to manually delete them.
 
 ```shell
 cd ~/.dotfiles
-./configure.sh -t clean
+./setup.sh -t clean
 rm -rf ~/.oh-my-zsh # optionally remove oh-my-zsh
 chsh -s $(which bash) # optionally change shell back to bash
 ```
 
 [solarized]: <http://ethanschoonover.com/solarized>
 [homebrew]: <http://brew.sh/>
-[vim8]: <https://github.com/vim/vim/blob/753289f9bf71c0528f00d803a39d017184640e9d/runtime/doc/version8.txt>
 [oh-my-zsh]: <https://github.com/robbyrussell/oh-my-zsh>
-[diff-so-fancy]: <https://github.com/so-fancy/diff-so-fancy>
+[delta]: https://github.com/dandavison/delta
 [nerd-fonts]: <https://github.com/ryanoasis/nerd-fonts>
-[prepatched]: <https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/DroidSansMono/complete/Droid%20Sans%20Mono%20Nerd%20Font%20Complete.otf>
+[p10k-fonts]: https://github.com/romkatv/powerlevel10k/#meslo-nerd-font-patched-for-powerlevel10k
 [gnome-terminal-colors-solarized]: <https://github.com/Anthony25/gnome-terminal-colors-solarized>
 [solarized-repo]: <https://github.com/altercation/solarized>
 [rg]: <https://github.com/BurntSushi/ripgrep>
@@ -241,3 +235,5 @@ chsh -s $(which bash) # optionally change shell back to bash
 [itermcolors]: <https://raw.githubusercontent.com/altercation/solarized/e40cd4130e2a82f9b03ada1ca378b7701b1a9110/iterm2-colors-solarized/Solarized%20Dark.itermcolors>
 [powerlevel10k]: <https://github.com/romkatv/powerlevel10k>
 [rupa/z]: <https://github.com/rupa/z>
+[exa]: https://github.com/ogham/exa
+[docker-hub]: https://hub.docker.com/r/liuandrewk/dotfiles
