@@ -8,6 +8,22 @@ fi
 ################################################################################
 # Generic helper functions
 ################################################################################
+plugins=(
+  # brew  # add brew to .zshrc.local for linux
+  colored-man-pages
+  docker
+  docker-compose
+  fast-syntax-highlighting
+  fd
+  git
+  golang
+  history-substring-search
+  nvm
+  ripgrep
+  vi-mode
+  zsh-autosuggestions
+)
+
 
 # Returns whether the given command is executable or aliased.
 _has() {
@@ -28,6 +44,7 @@ _append_to_path() {
   fi
 }
 
+_prepend_to_path /usr/local/go/bin
 _prepend_to_path /usr/local/bin
 _prepend_to_path /usr/bin
 _prepend_to_path $HOME/.local/bin
@@ -212,6 +229,6 @@ if [[ -f ~/.zshrc.local ]]; then
   source ~/.zshrc.local
 fi
 
-. ~/bin/z/z.sh
+. ~/.local/bin/z.sh
 
 source ~/.zsh_aliases
