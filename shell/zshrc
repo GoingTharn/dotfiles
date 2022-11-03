@@ -8,22 +8,6 @@ fi
 ################################################################################
 # Generic helper functions
 ################################################################################
-plugins=(
-  # brew  # add brew to .zshrc.local for linux
-  colored-man-pages
-  docker
-  docker-compose
-  fast-syntax-highlighting
-  fd
-  git
-  golang
-  history-substring-search
-  nvm
-  ripgrep
-  vi-mode
-  zsh-autosuggestions
-)
-
 
 # Returns whether the given command is executable or aliased.
 _has() {
@@ -73,15 +57,18 @@ fi
 
 # These are the default OMZ plugins that we'll install.
 plugins=(
-  git
   brew
-  history-substring-search
   colored-man-pages
-  vi-mode
-  git-auto-fetch
-  fd
-  ripgrep
+  docker
+  docker-compose
   fast-syntax-highlighting
+  fd
+  git
+  golang
+  history-substring-search
+  nvm
+  ripgrep
+  vi-mode
   zsh-autosuggestions
 )
 
@@ -227,6 +214,5 @@ done
 if [[ -f ~/.zshrc.local ]]; then
   source ~/.zshrc.local
 fi
-
 
 source ~/.zsh_aliases
