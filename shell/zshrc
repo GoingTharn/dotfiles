@@ -191,7 +191,6 @@ source $ZSH/oh-my-zsh.sh
 
 # Set key bindings.
 bindkey -v # vi mode for shell
-bindkey -e # enable C-x-e for shell editor
 # Key bindings for history search.
 bindkey '\e[3~' delete-char
 bindkey '^R' history-incremental-search-backward
@@ -229,6 +228,5 @@ if [[ -f ~/.zshrc.local ]]; then
   source ~/.zshrc.local
 fi
 
-. ~/.local/bin/z.sh
 
 source ~/.zsh_aliases
