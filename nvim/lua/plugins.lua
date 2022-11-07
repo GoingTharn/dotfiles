@@ -138,6 +138,7 @@ packer.startup(function(use)
 
   -- Language-specific plugins.
   use 'tweekmonster/gofmt.vim'
+  use 'fatih/vim-go'
 
   -- Miscellaneous plugins.
   use 'psliwka/vim-smoothie'
