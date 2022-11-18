@@ -148,6 +148,7 @@ packer.startup(function(use)
       require('numb').setup()
     end,
   }
+  use 'tpope/vim-commentary'
 
   -- Automatically sync all packages if we're bootstrapping.
   if bootstrap then

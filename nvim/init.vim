@@ -10,3 +10,14 @@ lua require('keybindings')
 if filereadable(glob("~/.vimrc.local"))
   source ~/.vimrc.local
 endif
+
+let mapleader=","
+
+" Shortcut to edit THIS configuration file: (e)dit (c)onfiguration
+nnoremap <silent> <leader>ec :e $MYVIMRC<CR>
+
+" Shortcut to source (reload) THIS configuration file after editing it: (s)ource (c)onfiguraiton
+nnoremap <silent> <leader>sc :source $MYVIMRC<CR>
+
+nnoremap <leader>t :GoTest %
+nnoremap <leader>v :Vista<CR>

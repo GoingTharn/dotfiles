@@ -59,6 +59,7 @@ fi
 plugins=(
   brew
   colored-man-pages
+  direnv
   docker
   docker-compose
   fast-syntax-highlighting

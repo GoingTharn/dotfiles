@@ -1,3 +1,4 @@
 alias scan="alias | rg"
 alias undo="reset HEAD~"
 alias tb="/opt/jetbrains-toolbox-1.23.11849/jetbrains-toolbox"
+alias cf=confluent
