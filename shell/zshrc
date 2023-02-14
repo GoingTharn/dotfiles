@@ -158,6 +158,7 @@ setopt rmstarsilent # silence rm * confirmation
 _prepend_to_path /usr/local/bin
 _prepend_to_path /usr/local/sbin
 _prepend_to_path $HOME/.local/bin
+_prepend_to_path $HOME/go/bin
 
 # Decrease delay in entering normal mode in shell.
 # https://www.johnhawthorn.com/2012/09/vi-escape-delays/

@@ -2,6 +2,7 @@
 " Since this may fail if we're bootstrapping, we use a pcall.
 lua pcall(require, 'impatient')
 
+let mapleader=","
 lua require('plugins')
 lua require('settings')
 lua require('keybindings')
@@ -11,7 +12,6 @@ if filereadable(glob("~/.vimrc.local"))
   source ~/.vimrc.local
 endif
 
-let mapleader=","
 
 " Shortcut to edit THIS configuration file: (e)dit (c)onfiguration
 nnoremap <silent> <leader>ec :e $MYVIMRC<CR>
@@ -21,3 +21,4 @@ nnoremap <silent> <leader>sc :source $MYVIMRC<CR>
 
 nnoremap <leader>t :GoTest %
 nnoremap <leader>v :Vista<CR>
+nnoremap <leader>? :help nvim-tree-default-mappings<CR>
