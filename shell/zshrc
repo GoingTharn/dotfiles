@@ -150,13 +150,12 @@ setopt correct # enable spelling suggestions
 setopt rmstarsilent # silence rm * confirmation
 
 # Add common bin directories to path.
-_prepend_to_path /usr/local/bin
-_prepend_to_path /usr/local/sbin
 _prepend_to_path $HOME/.local/bin
-_prepend_to_path /usr/local/go/bin
 _prepend_to_path $HOME/go/bin
 _prepend_to_path /usr/bin
-
+_prepend_to_path /usr/local/bin
+_prepend_to_path /usr/local/go/bin
+_prepend_to_path /usr/local/sbin
 
 # Decrease delay in entering normal mode in shell.
 # https://www.johnhawthorn.com/2012/09/vi-escape-delays/
