@@ -55,6 +55,9 @@ for _, server in ipairs(mason_lspconfig.get_installed_servers()) do
           globals = { "vim" },
         },
       },
+      gopls = {
+        env = {GOFLAGS="-tags=integration"}
+      }
     },
   }
 end
