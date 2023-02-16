@@ -7,6 +7,8 @@ lua require('plugins')
 lua require('settings')
 lua require('keybindings')
 
+let g:go_build_tags = "smoke integration"
+
 " Source custom configs (not under version control).
 if filereadable(glob("~/.vimrc.local"))
   source ~/.vimrc.local
