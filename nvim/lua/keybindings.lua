@@ -18,9 +18,19 @@ vim.cmd 'command! Wqa wqa'
 vim.cmd 'command! WQa wqa'
 vim.cmd 'command! WQA wqa'
 
--- Map <ctrl-l> and <ctrl-h> to go to the next and previous buffers.
-vim.api.nvim_set_keymap('n', '<C-l>', ':bnext<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<C-h>', ':bprev<cr>', { noremap = true })
+-- Map <ctrl-arrow keys>  to go to the next and previous buffers.
+vim.api.nvim_set_keymap('n', '<C-Right>', ':BufferLineCycleNext<cr>', { noremap = true })
+vim.api.nvim_set_keymap('n', '<C-Left>', ':BufferLineCyclePrev<cr>', { noremap = true })
+
+-- Tmux/WinNav Keybindings
+local map = vim.api.nvim_set_keymap
+local opts = { noremap = true, silent = true }
+
+map('n', "<C-h>", "<CMD>lua require('Navigator').left()<CR>", opts)
+map('n', "<C-k>", "<CMD>lua require('Navigator').up()<CR>", opts)
+map('n', "<C-l>", "<CMD>lua require('Navigator').right()<CR>", opts)
+map('n', "<C-j>", "<CMD>lua require('Navigator').down()<CR>", opts)
+map('n', "<A-p>", "<CMD>lua require('Navigator').previous()<CR>", opts)
 
 -- Set <ctrl-p> to open Telescope file search.
 vim.api.nvim_set_keymap('n', '<C-p>', ':Telescope find_files<cr>', { noremap = true })

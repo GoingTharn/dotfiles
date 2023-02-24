@@ -151,6 +151,13 @@ packer.startup(function(use)
   }
   use 'tpope/vim-commentary'
 
+  use {
+    'numToStr/Navigator.nvim',
+    config = function()
+        require('Navigator').setup()
+    end
+  }
+
   -- Automatically sync all packages if we're bootstrapping.
   if bootstrap then
     packer.sync()
