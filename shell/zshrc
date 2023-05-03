@@ -28,6 +28,24 @@ _append_to_path() {
   fi
 }
 
+# These are the default OMZ plugins that we'll install.
+plugins=(
+  brew
+  colored-man-pages
+  direnv
+  docker
+  docker-compose
+  fast-syntax-highlighting
+  fd
+  git
+  golang
+  history-substring-search
+  nvm
+  ripgrep
+  vi-mode
+  zsh-autosuggestions
+)
+
 ################################################################################
 # Oh-My-ZSH prerequisite setup
 ################################################################################
@@ -49,24 +67,6 @@ _p10k_incompatible_emulators=(
 if [[ -n "${_p10k_incompatible_emulators[(r)$TERM_PROGRAM]}" ]]; then
   ZSH_THEME='robbyrussell'
 fi
-
-# These are the default OMZ plugins that we'll install.
-plugins=(
-  brew
-  colored-man-pages
-  direnv
-  docker
-  docker-compose
-  fast-syntax-highlighting
-  fd
-  git
-  golang
-  history-substring-search
-  nvm
-  ripgrep
-  vi-mode
-  zsh-autosuggestions
-)
 
 ################################################################################
 # FZF setup
