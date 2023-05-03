@@ -14,6 +14,7 @@ if filereadable(glob("~/.vimrc.local"))
   source ~/.vimrc.local
 endif
 
+set clipboard+=unnamedplus
 
 " Shortcut to edit THIS configuration file: (e)dit (c)onfiguration
 nnoremap <silent> <leader>ec :e $MYVIMRC<CR>
