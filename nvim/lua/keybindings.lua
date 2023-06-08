@@ -1,4 +1,4 @@
--- Abbreviate common commands.
+-- Abbreviate common 
 vim.cmd 'command! PI PackerInstall'
 vim.cmd 'command! PS PackerSync'
 vim.cmd 'command! PST PackerStatus'
@@ -32,6 +32,8 @@ map('n', "<C-l>", "<CMD>lua require('Navigator').right()<CR>", opts)
 map('n', "<C-j>", "<CMD>lua require('Navigator').down()<CR>", opts)
 map('n', "<A-p>", "<CMD>lua require('Navigator').previous()<CR>", opts)
 
+-- Set <ctrl-<CR>> to open Telescope previous search.
+vim.api.nvim_set_keymap('n', '<CR>', ':Telescope resume<cr>', { noremap = true })
 -- Set <ctrl-p> to open Telescope file search.
 vim.api.nvim_set_keymap('n', '<C-p>', ':Telescope find_files<cr>', { noremap = true })
 -- Set <ctrl-g> to open Telescope grep.
@@ -45,3 +47,9 @@ vim.api.nvim_set_keymap('i', '<C-c>', '<Esc>\\`^', { noremap = true })
 
 -- Set <ctrl-n> to toggle nvim-tree.
 vim.api.nvim_set_keymap('n', '<leader>b>', ':DlvAddBreakpoint<CR>', { noremap = true })
+
+map('n', "gb", ":BufferLinePick<CR>", opts)
+map('n', "gD", ":BufferLinePickClose<CR>", opts)
+map('n', "<leader>t", ":GoTest %<CR>", opts)
+map('n', "<leader>v", ":Vista<CR>", opts)
+map('n', "<leader>?", ":help nvim-tree-default-mappings<CR>", opts)

@@ -1,5 +1,8 @@
 require('bufferline').setup {
   options = {
+    indicator = {
+        style = 'underline'
+    },
     offsets = {
       {
         filetype = 'NvimTree',

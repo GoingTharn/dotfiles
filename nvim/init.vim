@@ -22,6 +22,3 @@ nnoremap <silent> <leader>ec :e $MYVIMRC<CR>
 " Shortcut to source (reload) THIS configuration file after editing it: (s)ource (c)onfiguraiton
 nnoremap <silent> <leader>sc :source $MYVIMRC<CR>
 
-nnoremap <leader>t :GoTest %
-nnoremap <leader>v :Vista<CR>
-nnoremap <leader>? :help nvim-tree-default-mappings<CR>
