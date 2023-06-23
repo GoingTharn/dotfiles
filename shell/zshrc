@@ -214,4 +214,9 @@ if [[ -f ~/.zshrc.local ]]; then
   source ~/.zshrc.local
 fi
 
+if [[ -f ~/.local/bin/z ]]; then
+  source ~/.local/bin/z
+fi
+
+
 source ~/.zsh_aliases
