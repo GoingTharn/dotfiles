@@ -56,7 +56,6 @@ for _, server in ipairs(mason_lspconfig.get_installed_servers()) do
         },
       },
       gopls = {
-        env = {GOFLAGS="-tags=integration,unit"},
         gofumpt = true
       }
     },

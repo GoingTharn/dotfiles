@@ -51,5 +51,5 @@ vim.api.nvim_set_keymap('n', '<leader>b>', ':DlvAddBreakpoint<CR>', { noremap = 
 map('n', "gb", ":BufferLinePick<CR>", opts)
 map('n', "gD", ":BufferLinePickClose<CR>", opts)
 map('n', "<leader>t", ":GoTest %<CR>", opts)
-map('n', "<leader>v", ":Vista<CR>", opts)
-map('n', "<leader>?", ":help nvim-tree-default-mappings<CR>", opts)
+map('n', "<leader>v", ":Vista nvim_lsp<CR>", opts)
+map('n', "<leader>?", ":help nvim-tree-mappings-default<CR>", opts)
