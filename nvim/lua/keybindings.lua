@@ -53,3 +53,9 @@ map('n', "gC", ":BufferLinePickClose<CR>", opts)
 map('n', "<leader>t", ":GoTest %<CR>", opts)
 map('n', "<leader>v", ":Vista nvim_lsp<CR>", opts)
 map('n', "<leader>?", ":help nvim-tree-mappings-default<CR>", opts)
+
+
+-- Harpoon
+local harpoon = require("harpoon")
+harpoon:setup()
+vim.keymap.set("n", "<leader>a", function() harpoon:list():append() end)
