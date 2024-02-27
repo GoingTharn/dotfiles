@@ -49,7 +49,7 @@ vim.api.nvim_set_keymap('i', '<C-c>', '<Esc>\\`^', { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>b>', ':DlvAddBreakpoint<CR>', { noremap = true })
 
 map('n', "gb", ":BufferLinePick<CR>", opts)
-map('n', "gD", ":BufferLinePickClose<CR>", opts)
+map('n', "gC", ":BufferLinePickClose<CR>", opts)
 map('n', "<leader>t", ":GoTest %<CR>", opts)
 map('n', "<leader>v", ":Vista nvim_lsp<CR>", opts)
 map('n', "<leader>?", ":help nvim-tree-mappings-default<CR>", opts)
