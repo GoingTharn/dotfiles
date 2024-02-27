@@ -157,6 +157,11 @@ packer.startup(function(use)
         require('Navigator').setup()
     end
   }
+  use {
+    "ThePrimeagen/harpoon",
+    branch = "harpoon2",
+    requires = { {"nvim-lua/plenary.nvim"} }
+    }
 
   -- Automatically sync all packages if we're bootstrapping.
   if bootstrap then
