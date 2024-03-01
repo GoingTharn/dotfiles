@@ -46,6 +46,9 @@ plugins=(
   history-substring-search
   nvm
   ripgrep
+  python
+  virtualenv
+  virtualenvwrapper
   vi-mode
   zsh-autosuggestions
 )

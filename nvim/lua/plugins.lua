@@ -13,6 +13,7 @@ local packer = require('packer')
 -- Specify a custom compile path, since we don't want it next to our configs.
 packer.init({compile_path = compile_path})
 packer.startup(function(use)
+  use 'craftzdog/solarized-osaka.nvim'
   -- Let packer.nvim manage itself.
   use 'wbthomason/packer.nvim'
 
@@ -57,6 +58,15 @@ packer.startup(function(use)
     end,
   }
   use 'liuchengxu/vista.vim'
+  use{
+      "kylechui/nvim-surround",
+      tag = "*", -- Use for stability; omit to use `main` branch for the latest features
+      config = function()
+          require("nvim-surround").setup({
+              -- Configuration here, or leave empty to use defaults
+          })
+      end
+  }
 
   -- Plugins for git and version control.
   use 'tpope/vim-fugitive'

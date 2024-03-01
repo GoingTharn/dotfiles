@@ -5,3 +5,4 @@ alias cf=confluent
 alias mb="make build"
 alias db="make stop-confluent;make start-confluent;sleep 10;make build-kafka;"
 alias mrs="make register-schema"
+alias clean-eco="docker ps -q --filter name=\"ecosystem*\" | xargs -rn 1 docker stop | xargs -r -I{} docker container rm {} -v;docker volume rm ecosystem_postgres"
