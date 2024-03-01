@@ -147,6 +147,9 @@ export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
 # Export theme for http://github.com/sharkdp/bat.
 export BAT_THEME="Solarized (dark)"
 
+# zsh_autocomplete fix
+export ZSH_AUTOSUGGEST_COMPLETION_IGNORE="git *"
+
 # The bat executable may sometimes be called batcat on Debian/Ubuntu.
 if _has batcat; then
   alias bat="batcat"
