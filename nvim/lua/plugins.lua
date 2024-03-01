@@ -13,7 +13,12 @@ local packer = require('packer')
 -- Specify a custom compile path, since we don't want it next to our configs.
 packer.init({compile_path = compile_path})
 packer.startup(function(use)
-  use 'craftzdog/solarized-osaka.nvim'
+  use {
+    'craftzdog/solarized-osaka.nvim',
+    config = function()
+      vim.cmd('colorscheme solarized-osaka')
+    end,
+  }
   -- Let packer.nvim manage itself.
   use 'wbthomason/packer.nvim'
 
@@ -25,12 +30,6 @@ packer.startup(function(use)
 
   -- Cosmetic plugins.
   use 'lukas-reineke/indent-blankline.nvim'
-  use {
-    'ishan9299/nvim-solarized-lua',
-    config = function()
-      vim.cmd('colorscheme solarized')
-    end,
-  }
   use {
     'norcalli/nvim-colorizer.lua',
     config = function()
