@@ -1,7 +1,10 @@
 alias scan="alias | rg"
 alias undo="git reset HEAD~"
 alias tb="/opt/jetbrains-toolbox-1.23.11849/jetbrains-toolbox"
+alias kc=kubectl
+alias kx=kubectx
 alias cf=confluent
+alias tf=terraform
 alias mb="make build"
 alias db="make stop-confluent;make start-confluent;sleep 10;make build-kafka;"
 alias mrs="make register-schema"

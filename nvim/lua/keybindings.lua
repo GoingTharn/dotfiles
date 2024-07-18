@@ -41,6 +41,9 @@ vim.api.nvim_set_keymap('n', '<C-g>', ':Telescope live_grep<cr>', { noremap = tr
 -- Set <ctrl-n> to toggle nvim-tree.
 vim.api.nvim_set_keymap('n', '<C-n>', ':NvimTreeToggle<CR>', { noremap = true })
 
+-- Set <ctrl-n> to toggle nvim-tree.
+vim.api.nvim_set_keymap('n', '<leader>f', ':NvimTreeFindFile<CR>', { noremap = true })
+
 -- Remap <ctrl-c> to <esc>. This prevents cmp-buffer from running into errors.
 -- https://github.com/hrsh7th/cmp-buffer/issues/30#issuecomment-994011089
 vim.api.nvim_set_keymap('i', '<C-c>', '<Esc>\\`^', { noremap = true })
@@ -58,5 +61,5 @@ map('n', "<leader>?", ":help nvim-tree-mappings-default<CR>", opts)
 -- Harpoon
 local harpoon = require("harpoon")
 harpoon:setup()
-vim.keymap.set("n", "<leader>a", function() harpoon:list():append() end)
+vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end)
 vim.keymap.set("n", "<leader>C", function() harpoon:list():clear() end)
