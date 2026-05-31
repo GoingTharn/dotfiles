@@ -49,7 +49,6 @@ plugins=(
   nvm
   python
   virtualenv
-  virtualenvwrapper
   vi-mode
  # zsh-autosuggestions
 )
@@ -158,6 +157,7 @@ setopt correct # enable spelling suggestions
 setopt rmstarsilent # silence rm * confirmation
 
 # Add common bin directories to path.
+_prepend_to_path $HOME/.local/bin/adr-tools
 _prepend_to_path $HOME/.local/bin
 _prepend_to_path $HOME/go/bin
 _prepend_to_path /usr/bin
@@ -232,3 +232,7 @@ fpath=(/home/jb/.oh-my-zsh/custom/completions /home/jb/.oh-my-zsh/custom/plugins
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init - zsh)"
+eval "$(/home/jb/.local/bin/mise activate zsh)"
+
+# opencode
+export PATH=/home/jb/.opencode/bin:$PATH

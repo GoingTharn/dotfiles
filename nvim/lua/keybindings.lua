@@ -33,7 +33,7 @@ map('n', "<C-j>", "<CMD>lua require('Navigator').down()<CR>", opts)
 map('n', "<A-p>", "<CMD>lua require('Navigator').previous()<CR>", opts)
 
 -- Set <ctrl-<CR>> to open Telescope previous search.
--- vim.api.nvim_set_keymap('n', '<CR>', ':Telescope resume<cr>', { noremap = true })
+vim.api.nvim_set_keymap('n', '<CR>', ':Telescope resume<cr>', { noremap = true })
 -- Set <ctrl-p> to open Telescope file search.
 vim.api.nvim_set_keymap('n', '<C-p>', ':Telescope find_files<cr>', { noremap = true })
 -- Set <ctrl-g> to open Telescope grep.
@@ -48,7 +48,7 @@ vim.api.nvim_set_keymap('n', '<leader>f', ':NvimTreeFindFile<CR>', { noremap = t
 -- https://github.com/hrsh7th/cmp-buffer/issues/30#issuecomment-994011089
 vim.api.nvim_set_keymap('i', '<C-c>', '<Esc>\\`^', { noremap = true })
 
--- Set <ctrl-n> to toggle nvim-tree.
+-- Set <ctrl-n> to toggle go breakpoint.
 vim.api.nvim_set_keymap('n', '<leader>b>', ':DlvAddBreakpoint<CR>', { noremap = true })
 
 map('n', "gb", ":BufferLinePick<CR>", opts)
